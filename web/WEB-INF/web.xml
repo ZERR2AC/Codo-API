@@ -4,4 +4,12 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <servlet>
+        <servlet-name>ServerStatus</servlet-name>
+        <servlet-class>Controller.Status</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServerStatus</servlet-name>
+        <url-pattern>/api/status</url-pattern>
+    </servlet-mapping>
 </web-app>
