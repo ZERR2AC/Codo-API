@@ -1,4 +1,4 @@
-package Model;
+package Codo.Model;
 
 /**
  * Created by terrychan on 23/11/2016.

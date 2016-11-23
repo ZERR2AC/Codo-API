@@ -1,7 +1,7 @@
-package Controller;
+package Codo.Controller;
 
-import Model.Response;
-import Util.Json;
+import Codo.Model.Response;
+import Codo.Util.Json;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
