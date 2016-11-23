@@ -12,4 +12,22 @@
         <servlet-name>ServerStatus</servlet-name>
         <url-pattern>/api/status</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserRegister</servlet-name>
+        <servlet-class>Codo.Controller.User.Register</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserRegister</servlet-name>
+        <url-pattern>/api/user/register</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserLogin</servlet-name>
+        <servlet-class>Codo.Controller.User.Login</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserLogin</servlet-name>
+        <url-pattern>/api/user/login</url-pattern>
+    </servlet-mapping>
 </web-app>
