@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 public class Json {
     private static Gson gson;
 
+    private Json() {
+    }
+
     public static Gson getGson() {
         if (gson == null) {
             gson = new Gson();

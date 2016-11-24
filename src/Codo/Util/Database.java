@@ -10,6 +10,9 @@ import java.sql.Statement;
  * Created by terrychan on 23/11/2016.
  */
 public class Database {
+    private Database() {
+    }
+
     private static Connection getConnection() {
         String connectString = "jdbc:mysql://" + Constant.DB_HOST
                 + ":" + Constant.DB_PORT
