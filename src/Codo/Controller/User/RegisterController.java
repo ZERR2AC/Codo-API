@@ -1,6 +1,6 @@
 package Codo.Controller.User;
 
-import Codo.Model.Response;
+import Codo.Model.Response.Response;
 import Codo.Model.User;
 import Codo.Util.Json;
 
@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 /**
  * Created by terrychan on 23/11/2016.
  */
-public class Register extends HttpServlet {
+public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();

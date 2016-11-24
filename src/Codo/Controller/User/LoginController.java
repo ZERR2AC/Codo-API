@@ -1,7 +1,7 @@
 package Codo.Controller.User;
 
-import Codo.Model.LoginSucceedResponse;
-import Codo.Model.Response;
+import Codo.Model.Response.LoginSucceedResponse;
+import Codo.Model.Response.Response;
 import Codo.Model.User;
 import Codo.Util.Json;
 
@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 /**
  * Created by terrychan on 23/11/2016.
  */
-public class Login extends HttpServlet {
+public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
@@ -31,7 +31,7 @@ public class Login extends HttpServlet {
                 writer.write(Json.getGson().toJson(new Response(1, "username and password missmatch.")));
             } else {
                 String user_id = User.getUserId(username);
-                writer.write(Json.getGson().toJson(new LoginSucceedResponse(0, "ok.", token, user_id)));
+                writer.write(Json.getGson().toJson(new LoginSucceedResponse(token, user_id)));
             }
         }
     }
