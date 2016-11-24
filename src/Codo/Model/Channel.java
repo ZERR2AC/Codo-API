@@ -24,7 +24,7 @@ public class Channel {
      * @param name channel name
      * @return channel id if found else CONSTANT.STATE.ID_NOT_FOUND
      */
-    public static int getId(String name) {
+    private static int getIdByName(String name) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE name='%s';", CONSTANT.TABLE.CHANNEL, name));
         try {
             return resultSet.next() ? resultSet.getInt("id") : CONSTANT.STATE.ID_NOT_FOUND;
@@ -40,7 +40,7 @@ public class Channel {
      */
     public static Channel newChannel(String name, int createrId) {
         if (Database.update(String.format("INSERT INTO %s (name, creater_id) VALUES('%s', '%d');", CONSTANT.TABLE.CHANNEL, name, createrId))) {
-            return new Channel(getId(name), name, CONSTANT.CHANNEL.CREATER);
+            return new Channel(getIdByName(name), name, CONSTANT.CHANNEL.CREATER);
         } else {
             return null;
         }

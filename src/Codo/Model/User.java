@@ -46,7 +46,7 @@ public class User {
         }
     }
 
-    public static int getUserId(String username) {
+    public static int getIdByName(String username) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE username='%s';", CONSTANT.TABLE.USER, username));
         try {
             return resultSet.next() ? resultSet.getInt("id") : CONSTANT.STATE.ID_NOT_FOUND;
@@ -98,10 +98,10 @@ public class User {
      * @param password password
      * @return token if username and password match else a empty String
      */
-    public static String getToken(String username, String password) {
+    public static String createToken(String username, String password) {
         if (checkPassword(username, password)) {
             String token = tokenHash(username);
-            int id = getUserId(username);
+            int id = getIdByName(username);
             Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%d', '%s');", CONSTANT.TABLE.TOKEN, id, token));
             return token;
         } else {

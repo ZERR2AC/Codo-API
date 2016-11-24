@@ -27,12 +27,12 @@ public class LoginController extends HttpServlet {
         if (username.isEmpty() || password.isEmpty()) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
         } else {
-            String token = User.getToken(username, password);
+            String token = User.createToken(username, password);
             System.out.print(token);
             if (token.isEmpty()) {
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
             } else {
-                int user_id = User.getUserId(username);
+                int user_id = User.getIdByName(username);
                 writer.write(Json.getGson().toJson(new LoginSucceedResponse(token, user_id)));
             }
         }
