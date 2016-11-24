@@ -2,6 +2,7 @@ package Codo.Controller.Channel;
 
 import Codo.Model.Channel;
 import Codo.Model.Response.CreateChannelSucceedResponse;
+import Codo.Model.Response.GetChannelsSucceedResponse;
 import Codo.Model.Response.Response;
 import Codo.Model.User;
 import Codo.Util.CONSTANT;
@@ -20,7 +21,14 @@ import java.io.PrintWriter;
 public class ChannelController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        String token = req.getParameter("token");
+        int userId = User.getIdByToken(token);
+        PrintWriter writer = resp.getWriter();
+        if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
+            writer.write(Json.getGson().toJson(new Response(10, "token invalid.")));
+        } else {
+            writer.write(Json.getGson().toJson(new GetChannelsSucceedResponse(Channel.getAllChannel(userId))));
+        }
     }
 
     @Override

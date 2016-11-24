@@ -45,4 +45,22 @@ public class Channel {
             return null;
         }
     }
+
+    public static List<Channel> getAllChannel(int userId) {
+        List<Channel> channels = new ArrayList<>();
+        // TODO: 25/11/2016 等待订阅 channel 功能添加之后，这里需要使用 join
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s;", CONSTANT.TABLE.CHANNEL));
+        try {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                int createrId = resultSet.getInt("creater_id");
+                Channel channel = new Channel(id, name, createrId == userId ? CONSTANT.CHANNEL.CREATER : CONSTANT.CHANNEL.UNSUBSCRIBE);
+                channels.add(channel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return channels;
+    }
 }
