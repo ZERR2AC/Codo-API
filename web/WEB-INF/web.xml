@@ -15,7 +15,7 @@
 
     <servlet>
         <servlet-name>UserRegister</servlet-name>
-        <servlet-class>Codo.Controller.User.Register</servlet-class>
+        <servlet-class>Codo.Controller.User.RegisterController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserRegister</servlet-name>
@@ -24,10 +24,19 @@
 
     <servlet>
         <servlet-name>UserLogin</servlet-name>
-        <servlet-class>Codo.Controller.User.Login</servlet-class>
+        <servlet-class>Codo.Controller.User.LoginController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserLogin</servlet-name>
         <url-pattern>/api/user/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Channel</servlet-name>
+        <servlet-class>Codo.Controller.Channel.ChannelController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Channel</servlet-name>
+        <url-pattern>/api/channel</url-pattern>
     </servlet-mapping>
 </web-app>

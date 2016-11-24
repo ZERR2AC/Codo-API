@@ -1,6 +1,7 @@
 package Codo.Controller;
 
-import Codo.Model.Response;
+import Codo.Model.Response.Response;
+import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
 import javax.servlet.ServletException;
@@ -20,6 +21,6 @@ public class Status extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
-        writer.write(Json.getGson().toJson(new Response(0, "OK!")));
+        writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "OK!")));
     }
 }

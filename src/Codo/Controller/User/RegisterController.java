@@ -1,7 +1,8 @@
 package Codo.Controller.User;
 
-import Codo.Model.Response;
+import Codo.Model.Response.Response;
 import Codo.Model.User;
+import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
 import javax.servlet.ServletException;
@@ -14,7 +15,7 @@ import java.io.PrintWriter;
 /**
  * Created by terrychan on 23/11/2016.
  */
-public class Register extends HttpServlet {
+public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
@@ -22,13 +23,13 @@ public class Register extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         if (username.isEmpty()) {
-            writer.write(Json.getGson().toJson(new Response(1, "username has benn used.")));
+            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
         } else {
             if (User.hasUsername(username)) {
-                writer.write(Json.getGson().toJson(new Response(1, "username has benn used.")));
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
             } else {
                 User.doRegister(username, password);
-                writer.write(Json.getGson().toJson(new Response(0, "ok.")));
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
             }
         }
     }

@@ -1,4 +1,4 @@
-package Codo.Model;
+package Codo.Model.Response;
 
 /**
  * Created by terrychan on 23/11/2016.

@@ -10,14 +10,17 @@ import java.sql.Statement;
  * Created by terrychan on 23/11/2016.
  */
 public class Database {
+    private Database() {
+    }
+
     private static Connection getConnection() {
-        String connectString = "jdbc:mysql://" + Constant.DB_HOST
-                + ":" + Constant.DB_PORT
-                + "/" + Constant.DB_NAME
+        String connectString = "jdbc:mysql://" + CONSTANT.DATABASE.HOST
+                + ":" + CONSTANT.DATABASE.PORT
+                + "/" + CONSTANT.DATABASE.DATABASE_NAME
                 + "?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(connectString, Constant.DB_USER, Constant.DB_PASSWORD);
+            Connection conn = DriverManager.getConnection(connectString, CONSTANT.DATABASE.USERNAME, CONSTANT.DATABASE.PASSWORD);
             return conn;
         } catch (Exception e) {
             e.printStackTrace();
