@@ -17,12 +17,16 @@ public interface CONSTANT {
         String USER = "user";
         String TOKEN = "token";
         String CHANNEL = "channel";
+        String USER_CHANNEL = "user_channel";
     }
 
     interface CHANNEL {
         int UNSUBSCRIBE = 0;
         int CREATER = 1;
         int SUBSCRIBE = 2;
+
+        int ACTION_JOIN = 0;
+        int ACTION_EXIT = 1;
     }
 
     interface STATE {
@@ -31,5 +35,6 @@ public interface CONSTANT {
         int NAME_DUPLICATED = 1;
         int PASSWORD_MISSMATCH = 2;
         int TOKEN_INVALID = 10;
+        int ACTION_FAIL = 20;
     }
 }

@@ -24,7 +24,7 @@ public class Channel {
      * @param name channel name
      * @return channel id if found else CONSTANT.STATE.ID_NOT_FOUND
      */
-    public static int getId(String name) {
+    private static int getIdByName(String name) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE name='%s';", CONSTANT.TABLE.CHANNEL, name));
         try {
             return resultSet.next() ? resultSet.getInt("id") : CONSTANT.STATE.ID_NOT_FOUND;
@@ -40,7 +40,7 @@ public class Channel {
      */
     public static Channel newChannel(String name, int createrId) {
         if (Database.update(String.format("INSERT INTO %s (name, creater_id) VALUES('%s', '%d');", CONSTANT.TABLE.CHANNEL, name, createrId))) {
-            return new Channel(getId(name), name, CONSTANT.CHANNEL.CREATER);
+            return new Channel(getIdByName(name), name, CONSTANT.CHANNEL.CREATER);
         } else {
             return null;
         }
@@ -55,12 +55,37 @@ public class Channel {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 int createrId = resultSet.getInt("creater_id");
-                Channel channel = new Channel(id, name, createrId == userId ? CONSTANT.CHANNEL.CREATER : CONSTANT.CHANNEL.UNSUBSCRIBE);
+                int type;
+                if (createrId == userId)
+                    type = CONSTANT.CHANNEL.CREATER;
+                else if (inChannel(userId, id))
+                    type = CONSTANT.CHANNEL.SUBSCRIBE;
+                else
+                    type = CONSTANT.CHANNEL.UNSUBSCRIBE;
+                Channel channel = new Channel(id, name, type);
                 channels.add(channel);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return channels;
+    }
+
+    public static boolean joinChannel(int userId, int channelId) {
+        return Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
+    }
+
+    public static boolean exitChannel(int userId, int channelId) {
+        return Database.update(String.format("DELETE FROM %s WHERE user_id='%d' AND channel_id='%d';", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
+    }
+
+    public static boolean inChannel(int userId, int channelId) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE user_id='%d' AND channel_id='%d';", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
+        try {
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

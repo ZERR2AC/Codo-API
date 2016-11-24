@@ -32,11 +32,20 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Channels</servlet-name>
+        <servlet-class>Codo.Controller.Channel.ChannelsController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Channels</servlet-name>
+        <url-pattern>/api/channel</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Channel</servlet-name>
         <servlet-class>Codo.Controller.Channel.ChannelController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Channel</servlet-name>
-        <url-pattern>/api/channel</url-pattern>
+        <url-pattern>/api/channel/*</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -1,7 +1,6 @@
 package Codo.Controller.Channel;
 
 import Codo.Model.Channel;
-import Codo.Model.Response.CreateChannelSucceedResponse;
 import Codo.Model.Response.GetChannelsSucceedResponse;
 import Codo.Model.Response.Response;
 import Codo.Model.User;
@@ -16,35 +15,37 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by terrychan on 24/11/2016.
+ * Created by terrychan on 23/11/2016.
  */
 public class ChannelController extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String token = req.getParameter("token");
-        int userId = User.getIdByToken(token);
-        PrintWriter writer = resp.getWriter();
-        if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(10, "token invalid.")));
-        } else {
-            writer.write(Json.getGson().toJson(new GetChannelsSucceedResponse(Channel.getAllChannel(userId))));
-        }
-    }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(10, "token invalid.")));
+            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
-            String channelName = req.getParameter("name");
-            Channel channel = Channel.newChannel(channelName, userId);
-            if (channel == null) {
-                writer.write(Json.getGson().toJson(new Response(1, "channel name has benn used.")));
-            } else {
-                writer.write(Json.getGson().toJson(new CreateChannelSucceedResponse(channel)));
+            String url = req.getRequestURI();
+            String[] urls = url.split("/");
+            int channelId = Integer.parseInt(urls[urls.length - 1]);
+            int action = Integer.parseInt(req.getParameter("action"));
+            switch (action) {
+                case CONSTANT.CHANNEL.ACTION_JOIN:
+                    if (Channel.joinChannel(userId, channelId))
+                        writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok")));
+                    else
+                        writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "fail.")));
+                    break;
+                case CONSTANT.CHANNEL.ACTION_EXIT:
+                    if (Channel.exitChannel(userId, channelId))
+                        writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok")));
+                    else
+                        writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "fail.")));
+                    break;
+                default:
+                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "fail.")));
+                    break;
             }
         }
     }
