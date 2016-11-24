@@ -3,6 +3,7 @@ package Codo.Controller.User;
 import Codo.Model.Response.LoginSucceedResponse;
 import Codo.Model.Response.Response;
 import Codo.Model.User;
+import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
 import javax.servlet.ServletException;
@@ -24,13 +25,14 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password");
 
         if (username.isEmpty() || password.isEmpty()) {
-            writer.write(Json.getGson().toJson(new Response(1, "username and password missmatch.")));
+            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
         } else {
             String token = User.getToken(username, password);
+            System.out.print(token);
             if (token.isEmpty()) {
-                writer.write(Json.getGson().toJson(new Response(1, "username and password missmatch.")));
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
             } else {
-                String user_id = User.getUserId(username);
+                int user_id = User.getUserId(username);
                 writer.write(Json.getGson().toJson(new LoginSucceedResponse(token, user_id)));
             }
         }

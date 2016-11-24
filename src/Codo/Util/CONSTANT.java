@@ -20,8 +20,16 @@ public interface CONSTANT {
     }
 
     interface CHANNEL {
-        String UNSUBSCRIBE = "0";
-        String CREATER = "1";
-        String SUBSCRIBE = "2";
+        int UNSUBSCRIBE = 0;
+        int CREATER = 1;
+        int SUBSCRIBE = 2;
+    }
+
+    interface STATE {
+        int OK = 0;
+        int ID_NOT_FOUND = -1;
+        int NAME_DUPLICATED = 1;
+        int PASSWORD_MISSMATCH = 2;
+        int TOKEN_INVALID = 10;
     }
 }

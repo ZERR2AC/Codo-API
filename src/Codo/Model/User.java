@@ -46,18 +46,14 @@ public class User {
         }
     }
 
-    /**
-     * @param username username
-     * @return user_id
-     */
-    public static String getUserId(String username) {
+    public static int getUserId(String username) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE username='%s';", CONSTANT.TABLE.USER, username));
         try {
-            return resultSet.next() ? resultSet.getString("id") : "";
+            return resultSet.next() ? resultSet.getInt("id") : CONSTANT.STATE.ID_NOT_FOUND;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return CONSTANT.STATE.ID_NOT_FOUND;
     }
 
     /**
@@ -105,21 +101,21 @@ public class User {
     public static String getToken(String username, String password) {
         if (checkPassword(username, password)) {
             String token = tokenHash(username);
-            String id = getUserId(username);
-            Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%s', '%s');", CONSTANT.TABLE.TOKEN, id, token));
+            int id = getUserId(username);
+            Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%d', '%s');", CONSTANT.TABLE.TOKEN, id, token));
             return token;
         } else {
             return "";
         }
     }
 
-    public static String getIdByToken(String token) {
+    public static int getIdByToken(String token) {
         ResultSet resultSet = Database.query(String.format("SELECT user_id FROM %s WHERE token='%s';", CONSTANT.TABLE.TOKEN, token));
         try {
-            return resultSet.next() ? resultSet.getString("user_id") : "";
+            return resultSet.next() ? resultSet.getInt("user_id") : CONSTANT.STATE.ID_NOT_FOUND;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return CONSTANT.STATE.ID_NOT_FOUND;
     }
 }
