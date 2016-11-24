@@ -46,6 +46,10 @@ public class User {
         }
     }
 
+    /**
+     * @param username username
+     * @return user_id
+     */
     public static String getUserId(String username) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE username='%s';", Constant.TB_USER, username));
         try {
@@ -59,6 +63,10 @@ public class User {
         return "";
     }
 
+    /**
+     * @param username username
+     * @return true if the username has been used
+     */
     public static boolean hasUsername(String username) {
         ResultSet resultSet = Database.query(String.format("SELECT username FROM %s WHERE username='%s';", Constant.TB_USER, username));
         try {
@@ -69,10 +77,19 @@ public class User {
         }
     }
 
+    /**
+     * @param username username
+     * @param password password
+     */
     public static void doRegister(String username, String password) {
         Database.update(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');", Constant.TB_USER, username, passwordHash(username, password)));
     }
 
+    /**
+     * @param username username
+     * @param password password
+     * @return true if username and password match
+     */
     private static boolean checkPassword(String username, String password) {
         ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';", Constant.TB_USER, username, passwordHash(username, password)));
         try {
@@ -83,6 +100,11 @@ public class User {
         }
     }
 
+    /**
+     * @param username username
+     * @param password password
+     * @return token if username and password match else a empty String
+     */
     public static String getToken(String username, String password) {
         if (checkPassword(username, password)) {
             String token = tokenHash(username);
