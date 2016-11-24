@@ -1,6 +1,6 @@
 package Codo.Controller;
 
-import Codo.Model.Response;
+import Codo.Model.Response.Response;
 import Codo.Util.Json;
 
 import javax.servlet.ServletException;

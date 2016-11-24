@@ -1,6 +1,6 @@
 package Codo.Model;
 
-import Codo.Util.Constant;
+import Codo.Util.CONSTANT;
 import Codo.Util.Database;
 
 import java.security.MessageDigest;
@@ -23,7 +23,7 @@ public class User {
 
     private static String tokenHash(String username) {
         Date date = new Date();
-        String hashString = username + date.toString() + Constant.SALT;
+        String hashString = username + date.toString() + CONSTANT.DATABASE.SALT;
         byte[] hashByte = hashString.getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
@@ -35,7 +35,7 @@ public class User {
     }
 
     private static String passwordHash(String username, String password) {
-        String hashString = username + password + Constant.SALT;
+        String hashString = username + password + CONSTANT.DATABASE.SALT;
         byte[] hashByte = hashString.getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -51,12 +51,9 @@ public class User {
      * @return user_id
      */
     public static String getUserId(String username) {
-        ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE username='%s';", Constant.TB_USER, username));
+        ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE username='%s';", CONSTANT.TABLE.USER, username));
         try {
-            if (resultSet.next())
-                return resultSet.getString("id");
-            else
-                return "";
+            return resultSet.next() ? resultSet.getString("id") : "";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,7 +65,7 @@ public class User {
      * @return true if the username has been used
      */
     public static boolean hasUsername(String username) {
-        ResultSet resultSet = Database.query(String.format("SELECT username FROM %s WHERE username='%s';", Constant.TB_USER, username));
+        ResultSet resultSet = Database.query(String.format("SELECT username FROM %s WHERE username='%s';", CONSTANT.TABLE.USER, username));
         try {
             return resultSet.next();
         } catch (Exception e) {
@@ -82,7 +79,7 @@ public class User {
      * @param password password
      */
     public static void doRegister(String username, String password) {
-        Database.update(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');", Constant.TB_USER, username, passwordHash(username, password)));
+        Database.update(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');", CONSTANT.TABLE.USER, username, passwordHash(username, password)));
     }
 
     /**
@@ -91,7 +88,7 @@ public class User {
      * @return true if username and password match
      */
     private static boolean checkPassword(String username, String password) {
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';", Constant.TB_USER, username, passwordHash(username, password)));
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';", CONSTANT.TABLE.USER, username, passwordHash(username, password)));
         try {
             return resultSet.next();
         } catch (Exception e) {
@@ -109,10 +106,20 @@ public class User {
         if (checkPassword(username, password)) {
             String token = tokenHash(username);
             String id = getUserId(username);
-            Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%s', '%s');", Constant.TB_TOKEN, id, token));
+            Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%s', '%s');", CONSTANT.TABLE.TOKEN, id, token));
             return token;
         } else {
             return "";
         }
+    }
+
+    public static String getIdByToken(String token) {
+        ResultSet resultSet = Database.query(String.format("SELECT user_id FROM %s WHERE token='%s';", CONSTANT.TABLE.TOKEN, token));
+        try {
+            return resultSet.next() ? resultSet.getString("user_id") : "";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
