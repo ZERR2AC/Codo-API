@@ -46,7 +46,7 @@ public class Channel {
         }
     }
 
-    public static List<Channel> getAllChannel(int userId) {
+    public static List<Channel> getChannels(int userId, String paraType) {
         List<Channel> channels = new ArrayList<>();
         // TODO: 25/11/2016 等待订阅 channel 功能添加之后，这里需要使用 join
         ResultSet resultSet = Database.query(String.format("SELECT * FROM %s;", CONSTANT.TABLE.CHANNEL));
@@ -62,8 +62,10 @@ public class Channel {
                     type = CONSTANT.CHANNEL.SUBSCRIBE;
                 else
                     type = CONSTANT.CHANNEL.UNSUBSCRIBE;
-                Channel channel = new Channel(id, name, type);
-                channels.add(channel);
+                if (paraType.isEmpty() || type == Integer.parseInt(paraType)) {
+                    Channel channel = new Channel(id, name, type);
+                    channels.add(channel);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

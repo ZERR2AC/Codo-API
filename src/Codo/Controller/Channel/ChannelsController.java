@@ -27,7 +27,9 @@ public class ChannelsController extends HttpServlet {
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
-            writer.write(Json.getGson().toJson(new GetChannelsSucceedResponse(Channel.getAllChannel(userId))));
+            String type = req.getParameter("type");
+            if (type == null) type = "";
+            writer.write(Json.getGson().toJson(new GetChannelsSucceedResponse(Channel.getChannels(userId, type))));
         }
     }
 
