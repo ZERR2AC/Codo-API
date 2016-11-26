@@ -74,8 +74,8 @@ public class User {
      * @param username username
      * @param password password
      */
-    public static void doRegister(String username, String password) {
-        Database.update(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');", CONSTANT.TABLE.USER, username, passwordHash(username, password)));
+    public static boolean doRegister(String username, String password) {
+        return Database.update(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');", CONSTANT.TABLE.USER, username, passwordHash(username, password)));
     }
 
     /**
