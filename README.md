@@ -18,9 +18,9 @@ Please visit [Wiki](https://github.com/ZERR2AC/Codo-API/wiki)
 
 #### token
 
-| id   | user_id | token                        |
-| ---- | ------- | ---------------------------- |
-| id   | user id | md5 (username + time + salt) |
+| id       | user_id | token                        |
+| -------- | ------- | ---------------------------- |
+| token id | user id | md5 (username + time + salt) |
 
 #### channel
 
@@ -32,13 +32,13 @@ Please visit [Wiki](https://github.com/ZERR2AC/Codo-API/wiki)
 
 | id   | user_id | channel_id |
 | ---- | ------- | ---------- |
-|      |         |            |
+|      | user id | channel id |
 
 #### reminder
 
-| id   | title | content | due  | priority | channel_id |
-| ---- | ----- | ------- | ---- | -------- | ---------- |
-|      |       |         |      |          |            |
+| id   | title          | creater_id | content | due  | priority | channel_id | type |
+| ---- | -------------- | ---------- | ------- | ---- | -------- | ---------- | ---- |
+|      | reminder title |            |         |      |          |            |      |
 
 #### user_reminder
 

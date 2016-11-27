@@ -34,6 +34,7 @@ public interface CONSTANT {
         int ID_NOT_FOUND = -1;
         int NAME_DUPLICATED = 1;
         int PASSWORD_MISSMATCH = 2;
+        int PARAMETER_EMPTY = 3;
         int TOKEN_INVALID = 10;
         int ACTION_FAIL = 20;
     }

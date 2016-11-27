@@ -19,17 +19,16 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
-
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        if (username.isEmpty()) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
+        System.out.print(username + password);
+        if (username.isEmpty() || password.isEmpty()) {
+            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PARAMETER_EMPTY, "parameter is empty.")));
         } else {
-            if (User.hasUsername(username)) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
-            } else {
-                User.doRegister(username, password);
+            if (User.doRegister(username, password)) {
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+            } else {
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
             }
         }
     }

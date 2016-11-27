@@ -4,7 +4,9 @@ import Codo.Util.CONSTANT;
 import Codo.Util.Database;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,12 +14,13 @@ import java.util.List;
  */
 public class Channel {
     private int id, type;
-    private String name;
+    private String name, last_upate;
 
-    public Channel(int id, String name, int type) {
+    public Channel(int id, int type, String name, String last_upate) {
         this.id = id;
-        this.name = name;
         this.type = type;
+        this.name = name;
+        this.last_upate = last_upate;
     }
 
     /**
@@ -39,22 +42,25 @@ public class Channel {
      * @return channel id
      */
     public static Channel newChannel(String name, int createrId) {
-        if (Database.update(String.format("INSERT INTO %s (name, creater_id) VALUES('%s', '%d');", CONSTANT.TABLE.CHANNEL, name, createrId))) {
-            return new Channel(getIdByName(name), name, CONSTANT.CHANNEL.CREATER);
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        if (Database.update(String.format("INSERT INTO %s (name, creater_id, last_update) VALUES('%s', '%d', '%s');", CONSTANT.TABLE.CHANNEL, name, createrId, simpleDateFormat.format(date)))) {
+            return new Channel(getIdByName(name), CONSTANT.CHANNEL.CREATER, name, simpleDateFormat.format(date));
         } else {
             return null;
         }
     }
 
-    public static List<Channel> getAllChannel(int userId) {
+    public static List<Channel> getChannels(int userId, String paraType) {
         List<Channel> channels = new ArrayList<>();
         // TODO: 25/11/2016 等待订阅 channel 功能添加之后，这里需要使用 join
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s;", CONSTANT.TABLE.CHANNEL));
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s ORDER BY last_update DESC;", CONSTANT.TABLE.CHANNEL));
         try {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 int createrId = resultSet.getInt("creater_id");
+                String last_update = resultSet.getString("last_update");
                 int type;
                 if (createrId == userId)
                     type = CONSTANT.CHANNEL.CREATER;
@@ -62,8 +68,10 @@ public class Channel {
                     type = CONSTANT.CHANNEL.SUBSCRIBE;
                 else
                     type = CONSTANT.CHANNEL.UNSUBSCRIBE;
-                Channel channel = new Channel(id, name, type);
-                channels.add(channel);
+                if (paraType.isEmpty() || type == Integer.parseInt(paraType)) {
+                    Channel channel = new Channel(id, type, name, last_update);
+                    channels.add(channel);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
