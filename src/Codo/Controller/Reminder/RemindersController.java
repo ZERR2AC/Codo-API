@@ -1,11 +1,9 @@
 package Codo.Controller.Reminder;
 
-import Codo.Model.Channel;
-import Codo.Model.PrivateReminder;
-import Codo.Model.PublicReminder;
+import Codo.Model.*;
 import Codo.Model.Response.CreateReminderSucceedResponse;
+import Codo.Model.Response.GetRemindersSucceedResponse;
 import Codo.Model.Response.Response;
-import Codo.Model.User;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
@@ -20,6 +18,18 @@ import java.io.PrintWriter;
  * Created by terrychan on 27/11/2016.
  */
 public class RemindersController extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String token = req.getParameter("token");
+        int userId = User.getIdByToken(token);
+        PrintWriter writer = resp.getWriter();
+        if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
+            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+        } else {
+            writer.write(Json.getGson().toJson(new GetRemindersSucceedResponse(Reminder.getReminderByUserId(userId))));
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");

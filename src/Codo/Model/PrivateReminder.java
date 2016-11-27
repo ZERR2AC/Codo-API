@@ -12,6 +12,10 @@ public class PrivateReminder extends Reminder {
         super(title, content, due, id, priority, CONSTANT.REMINDER.PRIVATE, createrId);
     }
 
+    public PrivateReminder(String title, String content, String due, int id, int priority, int createrId, int state, String remark, String last_update) {
+        super(title, content, due, state, remark, id, priority, CONSTANT.REMINDER.PRIVATE, createrId, last_update);
+    }
+
     public static PrivateReminder newPrivateReminder(String title, String content, String due, int priority, int createrId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
                         "(title, creater_id, content, type, due, priority, last_update) " +
