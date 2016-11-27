@@ -80,4 +80,29 @@ public class Channel {
             return false;
         }
     }
+
+    public static ResultSet getUserIdInChannel(int channelId) {
+        return Database.query(String.format("SELECT user_id FROM %s WHERE channel_id='%d';", CONSTANT.TABLE.USER_CHANNEL, channelId));
+    }
+
+    public static boolean hasChannel(int channelId) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d';", CONSTANT.TABLE.CHANNEL, channelId));
+        try {
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isCreater(int channelId, int userId) {
+        ResultSet resultSet = Database.query(String.format("SELECT creater_id FROM %s WHERE id='%d';", CONSTANT.TABLE.CHANNEL, channelId));
+        try {
+            resultSet.next();
+            return userId == resultSet.getInt("creater_id");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

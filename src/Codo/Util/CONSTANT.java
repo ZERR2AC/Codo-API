@@ -18,6 +18,8 @@ public interface CONSTANT {
         String TOKEN = "token";
         String CHANNEL = "channel";
         String USER_CHANNEL = "user_channel";
+        String REMINDER = "reminder";
+        String USER_REMINDER = "user_reminder";
     }
 
     interface CHANNEL {
@@ -38,5 +40,13 @@ public interface CONSTANT {
         int PARAMETER_EMPTY = 3;
         int TOKEN_INVALID = 10;
         int ACTION_FAIL = 20;
+    }
+
+    interface REMINDER {
+        int PUBLIC = 0;
+        int PRIVATE = 1;
+
+        int UNDO = 0;
+        int COMPLETED = 1;
     }
 }
