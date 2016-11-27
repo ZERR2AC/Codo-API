@@ -1,10 +1,7 @@
 package Codo.Util;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Created by terrychan on 23/11/2016.
@@ -20,8 +17,8 @@ public class Database {
                 + "?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(connectString, CONSTANT.DATABASE.USERNAME, CONSTANT.DATABASE.PASSWORD);
-            return conn;
+            Connection connection = DriverManager.getConnection(connectString, CONSTANT.DATABASE.USERNAME, CONSTANT.DATABASE.PASSWORD);
+            return connection;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,33 +26,54 @@ public class Database {
     }
 
     public static ResultSet query(String sql) {
-        ResultSet rs = null;
+        ResultSet resultSet = null;
         try {
             Connection conn = getConnection();
             Statement stat = conn.createStatement();
-            rs = stat.executeQuery(sql);
+            resultSet = stat.executeQuery(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return rs;
+        return resultSet;
     }
 
     public static boolean update(String sql) {
-        Connection conn = null;
+        Connection connection = null;
         try {
-            conn = getConnection();
-            Statement stat = conn.createStatement();
-            stat.executeUpdate(sql);
+            connection = getConnection();
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                conn.close();
+                connection.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return false;
+    }
+
+    public static int insert(String sql) {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return CONSTANT.STATE.DATABASE_ERROR;
     }
 }

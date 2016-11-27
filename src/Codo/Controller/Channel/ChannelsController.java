@@ -44,7 +44,7 @@ public class ChannelsController extends HttpServlet {
             String channelName = req.getParameter("name");
             Channel channel = Channel.newChannel(channelName, userId);
             if (channel == null) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "channel name has benn used.")));
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.DATABASE_ERROR, "database error.")));
             } else {
                 writer.write(Json.getGson().toJson(new CreateChannelSucceedResponse(channel)));
             }
