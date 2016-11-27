@@ -51,7 +51,7 @@
 
     <servlet>
         <servlet-name>Reminders</servlet-name>
-        <servlet-class>Codo.Controller.Reminder.RemindersController</servlet-class>
+        <servlet-class>Codo.Controller.Reminder.ReminderController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Reminders</servlet-name>
@@ -60,7 +60,7 @@
 
     <servlet>
         <servlet-name>Reminder</servlet-name>
-        <servlet-class>Codo.Controller.Reminder.ReminderController</servlet-class>
+        <servlet-class>Codo.Controller.Reminder.RemindersController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Reminder</servlet-name>
