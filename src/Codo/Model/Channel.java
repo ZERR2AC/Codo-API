@@ -2,11 +2,10 @@ package Codo.Model;
 
 import Codo.Util.CONSTANT;
 import Codo.Util.Database;
+import Codo.Util.Timestamp;
 
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,10 +41,8 @@ public class Channel {
      * @return channel id
      */
     public static Channel newChannel(String name, int createrId) {
-        Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        if (Database.update(String.format("INSERT INTO %s (name, creater_id, last_update) VALUES('%s', '%d', '%s');", CONSTANT.TABLE.CHANNEL, name, createrId, simpleDateFormat.format(date)))) {
-            return new Channel(getIdByName(name), CONSTANT.CHANNEL.CREATER, name, simpleDateFormat.format(date));
+        if (Database.update(String.format("INSERT INTO %s (name, creater_id, last_update) VALUES('%s', '%d', '%s');", CONSTANT.TABLE.CHANNEL, name, createrId, Timestamp.getTime()))) {
+            return new Channel(getIdByName(name), CONSTANT.CHANNEL.CREATER, name, Timestamp.getTime());
         } else {
             return null;
         }
