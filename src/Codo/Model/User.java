@@ -12,6 +12,14 @@ import java.util.Date;
  * Created by terrychan on 23/11/2016.
  */
 public class User {
+    private int id;
+    private String username;
+
+    public User(int id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
     private static String convertToHexString(byte[] bytes) {
         String result = "";
         for (byte aByte : bytes) {
