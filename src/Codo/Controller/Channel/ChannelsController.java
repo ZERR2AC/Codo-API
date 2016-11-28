@@ -19,6 +19,7 @@ import java.io.PrintWriter;
  * Created by terrychan on 24/11/2016.
  */
 public class ChannelsController extends HttpServlet {
+    // get all channels in server
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");
@@ -33,6 +34,7 @@ public class ChannelsController extends HttpServlet {
         }
     }
 
+    // create a new channel
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");

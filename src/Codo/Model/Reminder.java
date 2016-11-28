@@ -37,7 +37,7 @@ public class Reminder {
         this.last_update = last_update;
     }
 
-    public static List<Reminder> getReminderByUserId(int userId) {
+    public static List<Reminder> getRemindersByUserId(int userId) {
         ResultSet resultSet = Database.query(String.format("SELECT state,remark,title,content,type,due,priority,channel_id,last_update,reminder_id,creater_id FROM %s INNER JOIN %s ON %s.reminder_id = %s.id WHERE user_id='%d';",
                 CONSTANT.TABLE.USER_REMINDER, CONSTANT.TABLE.REMINDER, CONSTANT.TABLE.USER_REMINDER, CONSTANT.TABLE.REMINDER, userId));
         List<Reminder> reminders = new ArrayList<>();

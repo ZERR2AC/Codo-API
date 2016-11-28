@@ -17,6 +17,7 @@ import java.io.PrintWriter;
  * Created by terrychan on 23/11/2016.
  */
 public class LoginController extends HttpServlet {
+    // user login
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
