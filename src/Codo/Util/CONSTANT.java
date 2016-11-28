@@ -39,6 +39,7 @@ public interface CONSTANT {
         int PASSWORD_MISSMATCH = 2;
         int PARAMETER_EMPTY = 3;
         int TOKEN_INVALID = 10;
+        int PERMISSION_DENY = 11;
         int ACTION_FAIL = 20;
     }
 

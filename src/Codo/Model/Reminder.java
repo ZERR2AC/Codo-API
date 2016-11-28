@@ -11,8 +11,8 @@ import java.util.List;
  * Created by terrychan on 23/11/2016.
  */
 public class Reminder {
-    private String title, content, due, remark, last_update;
-    private int id, priority, type, creater_id, state;
+    public String title, content, due, remark, last_update;
+    public int id, priority, type, creater_id, state;
 
     public Reminder(String title, String content, String due, int id, int priority, int type, int creater_id) {
         this.title = title;
@@ -66,5 +66,19 @@ public class Reminder {
             e.printStackTrace();
         }
         return reminders;
+    }
+
+    public static int getReminderTypeById(int reminderId) {
+        ResultSet resultSet = Database.query(String.format("SELECT type FROM %s WHERE id='%d';", CONSTANT.TABLE.REMINDER, reminderId));
+        try {
+            if (resultSet.next()) {
+                return resultSet.getInt("type");
+            } else {
+                return CONSTANT.STATE.ID_NOT_FOUND;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CONSTANT.STATE.ID_NOT_FOUND;
     }
 }
