@@ -62,6 +62,7 @@ public class ReminderController extends HttpServlet {
                         }
                         break;
                     case CONSTANT.REMINDER.PUBLIC:
+                        // TODO: 29/11/2016 分类处理，creater 或者是 listener
                         break;
                 }
             }

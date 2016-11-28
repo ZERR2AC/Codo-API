@@ -62,6 +62,7 @@ public class RemindersController extends HttpServlet {
                         }
                         break;
                     case CONSTANT.REMINDER.PRIVATE:
+                        // TODO: 29/11/2016 可以添加 remark
                         PrivateReminder privateReminder = PrivateReminder.newPrivateReminder(title, content, due, priority, userId);
                         writer.write(Json.getGson().toJson(new CreateReminderSucceedResponse(privateReminder)));
                         break;
