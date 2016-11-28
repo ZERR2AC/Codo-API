@@ -68,6 +68,10 @@ public class Reminder {
         return reminders;
     }
 
+    public boolean ownReminder(int userId) {
+        return this.creater_id == userId;
+    }
+
     public static int getReminderTypeById(int reminderId) {
         ResultSet resultSet = Database.query(String.format("SELECT type FROM %s WHERE id='%d';", CONSTANT.TABLE.REMINDER, reminderId));
         try {

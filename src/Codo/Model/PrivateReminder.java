@@ -24,8 +24,8 @@ public class PrivateReminder extends Reminder {
                         "VALUE ('%s', '%d', '%s', '%d', '%s', '%d', '%s');",
                 CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PRIVATE, due, priority, Timestamp.getTime())
         );
-        Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state) VALUE ('%d', '%d', '%d')",
-                CONSTANT.TABLE.USER_REMINDER, createrId, reminderId, CONSTANT.REMINDER.UNDO));
+        Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state, remark) VALUE ('%d', '%d', '%d', '%s')",
+                CONSTANT.TABLE.USER_REMINDER, createrId, reminderId, CONSTANT.REMINDER.UNDO, ""));
         if (reminderId == CONSTANT.STATE.DATABASE_ERROR) return null;
         return new PrivateReminder(title, content, due, reminderId, priority, createrId);
     }
@@ -61,10 +61,6 @@ public class PrivateReminder extends Reminder {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public boolean ownReminder(int userId) {
-        return this.creater_id == userId;
     }
 
     public boolean save() {
