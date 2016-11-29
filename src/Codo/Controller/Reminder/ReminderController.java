@@ -131,13 +131,17 @@ public class ReminderController extends HttpServlet {
             String[] urls = url.split("/");
             int reminderId = Integer.parseInt(urls[urls.length - 1]);
             if (Reminder.isCreater(reminderId, userId)) {
-                if (Reminder.delete(reminderId)) {
+                if (Reminder.createrDelete(reminderId)) {
                     writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
                 } else {
                     writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                 }
             } else {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                if (Reminder.subscribeDelete(reminderId, userId)) {
+                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+                } else {
+                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                }
             }
         }
     }
