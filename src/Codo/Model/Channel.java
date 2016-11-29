@@ -105,4 +105,18 @@ public class Channel {
             return false;
         }
     }
+
+    public static Channel getChannelById(int channelId) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d';", CONSTANT.TABLE.CHANNEL, channelId));
+        try {
+            resultSet.next();
+            String name = resultSet.getString("name");
+            String lastUpdate = resultSet.getString("last_update");
+            // for creater to use
+            return new Channel(channelId, CONSTANT.CHANNEL.CREATER, name, lastUpdate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -10,16 +10,16 @@ import java.sql.ResultSet;
  * Created by terrychan on 27/11/2016.
  */
 public class PublicReminder extends Reminder {
-    private int channel_id;
+    private Channel channel;
 
     public PublicReminder(String title, String content, String due, int id, int priority, int channel_id, int creater_id) {
         super(title, content, due, id, priority, CONSTANT.REMINDER.PUBLIC, creater_id);
-        this.channel_id = channel_id;
+        this.channel = Channel.getChannelById(channel_id);
     }
 
     public PublicReminder(String title, String content, String due, int id, int priority, int channel_id, int creater_id, int state, String remark, String last_update) {
         super(title, content, due, state, remark, id, priority, CONSTANT.REMINDER.PUBLIC, creater_id, last_update);
-        this.channel_id = channel_id;
+        this.channel = Channel.getChannelById(channel_id);
     }
 
     public static PublicReminder newPublicReminder(int createrId, String title, String content, String due, int priority, int channelId) {
@@ -41,4 +41,5 @@ public class PublicReminder extends Reminder {
         }
         return new PublicReminder(title, content, due, reminderId, priority, channelId, createrId);
     }
+
 }
