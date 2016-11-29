@@ -96,7 +96,11 @@ public class Reminder {
         }
     }
 
-    public static boolean delete(int reminder_id) {
-        return Database.update(String.format("DELETE FROM %s WHERE id='%s';", CONSTANT.TABLE.REMINDER, reminder_id));
+    public static boolean createrDelete(int reminderId) {
+        return Database.update(String.format("DELETE FROM %s WHERE id='%s';", CONSTANT.TABLE.REMINDER, reminderId));
+    }
+
+    public static boolean subscribeDelete(int reminderId, int userId) {
+        return Database.update(String.format("DELETE FROM %s WHERE reminder_id='%s' AND user_id='%d';", CONSTANT.TABLE.USER_REMINDER, reminderId, userId));
     }
 }
