@@ -10,7 +10,7 @@ Please visit [Wiki](https://github.com/ZERR2AC/Codo-API/wiki)
 
 ### Table
 
-![](http://ww1.sinaimg.cn/large/006y8mN6jw1fa75fhcfpyj30ov0en76p.jpg)
+![](http://static.32ph.com/codo-api-db.svg)
 
 #### user
 
