@@ -85,4 +85,18 @@ public class Reminder {
         }
         return CONSTANT.STATE.ID_NOT_FOUND;
     }
+
+    public static boolean isCreater(int reminder_id, int user_id) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d' AND creater_id='%d';", CONSTANT.TABLE.REMINDER, reminder_id, user_id));
+        try {
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean delete(int reminder_id) {
+        return Database.update(String.format("DELETE FROM %s WHERE id='%s';", CONSTANT.TABLE.REMINDER, reminder_id));
+    }
 }

@@ -43,13 +43,73 @@ public class PublicReminder extends Reminder {
         return new PublicReminder(title, content, due, reminderId, priority, channelId, createrId);
     }
 
-    public static boolean isCreater(int reminder_id, int user_id) {
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d' AND creater_id='%d';", CONSTANT.TABLE.REMINDER, reminder_id, user_id));
+    public static int getChannelId(int reminderId) {
+        ResultSet resultSet = Database.query(String.format("SELECT channel_id FROM %s WHERE id='%d';", CONSTANT.TABLE.REMINDER, reminderId));
         try {
-            return resultSet.next();
+            resultSet.next();
+            return resultSet.getInt("channel_id");
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return CONSTANT.STATE.ID_NOT_FOUND;
+    }
+
+    public static boolean update(int reminderId, String title, String content, String due, String priority) {
+        int channelId = getChannelId(reminderId);
+
+        if (!Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.CHANNEL) +
+                String.format("SET last_update='%s' ", Timestamp.getTime()) +
+                String.format("WHERE id='%d';", channelId)))
+            return false;
+
+        if (!Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
+                String.format("SET last_update='%s' ", Timestamp.getTime()) +
+                String.format("WHERE reminder_id='%d';", reminderId)))
+            return false;
+
+        if (!title.isEmpty())
+            if (!Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET title='%s' ", title) +
+                    String.format("WHERE id='%d';", reminderId)))
+                return false;
+
+        if (!content.isEmpty())
+            if (!Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET content='%s' ", content) +
+                    String.format("WHERE id='%d';", reminderId)))
+                return false;
+
+        if (!due.isEmpty())
+            if (!Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET due='%s' ", due) +
+                    String.format("WHERE id='%d';", reminderId)))
+                return false;
+
+        // TODO: 29/11/2016 Check parameter
+        if (!priority.isEmpty()) {
+            if (!Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET priority='%s' ", priority) +
+                    String.format("WHERE id='%d';", reminderId)))
+                return false;
+        }
+
+        return true;
+    }
+
+    public static boolean updateRemark(int reminderId, int userId, String remark) {
+        return Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
+                String.format("SET remark='%s',", remark) +
+                String.format("SET last_update='%s',", Timestamp.getTime()) +
+                String.format("WHERE reminder_id='%d' AND user_id='%d';", reminderId, userId));
+
+    }
+
+    public static boolean updateState(int reminderId, int userId, int state) {
+        // TODO: 29/11/2016 Check parameter
+        return Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
+                String.format("SET state='%d',", state) +
+                String.format("SET last_update='%s',", Timestamp.getTime()) +
+                String.format("WHERE reminder_id='%d' AND user_id='%d';", reminderId, userId));
+
     }
 }
