@@ -2,11 +2,10 @@ package Codo.Model;
 
 import Codo.Util.CONSTANT;
 import Codo.Util.Database;
+import Codo.Util.Timestamp;
 
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,27 +24,12 @@ public class Channel {
 
     /**
      * @param name channel name
-     * @return channel id if found else CONSTANT.STATE.ID_NOT_FOUND
-     */
-    private static int getIdByName(String name) {
-        ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE name='%s';", CONSTANT.TABLE.CHANNEL, name));
-        try {
-            return resultSet.next() ? resultSet.getInt("id") : CONSTANT.STATE.ID_NOT_FOUND;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return CONSTANT.STATE.ID_NOT_FOUND;
-    }
-
-    /**
-     * @param name channel name
      * @return channel id
      */
     public static Channel newChannel(String name, int createrId) {
-        Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        if (Database.update(String.format("INSERT INTO %s (name, creater_id, last_update) VALUES('%s', '%d', '%s');", CONSTANT.TABLE.CHANNEL, name, createrId, simpleDateFormat.format(date)))) {
-            return new Channel(getIdByName(name), CONSTANT.CHANNEL.CREATER, name, simpleDateFormat.format(date));
+        int id = Database.insert(String.format("INSERT INTO %s (name, creater_id, last_update) VALUES('%s', '%d', '%s');", CONSTANT.TABLE.CHANNEL, name, createrId, Timestamp.getTime()));
+        if (id != CONSTANT.STATE.DATABASE_ERROR) {
+            return new Channel(id, CONSTANT.CHANNEL.CREATER, name, Timestamp.getTime());
         } else {
             return null;
         }
@@ -80,7 +64,7 @@ public class Channel {
     }
 
     public static boolean joinChannel(int userId, int channelId) {
-        return Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
+        return !isCreater(channelId, userId) && Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
     }
 
     public static boolean exitChannel(int userId, int channelId) {
@@ -94,6 +78,45 @@ public class Channel {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public static ResultSet getUserIdInChannel(int channelId) {
+        return Database.query(String.format("SELECT user_id FROM %s WHERE channel_id='%d';", CONSTANT.TABLE.USER_CHANNEL, channelId));
+    }
+
+    public static boolean hasChannel(int channelId) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d';", CONSTANT.TABLE.CHANNEL, channelId));
+        try {
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isCreater(int channelId, int userId) {
+        ResultSet resultSet = Database.query(String.format("SELECT creater_id FROM %s WHERE id='%d';", CONSTANT.TABLE.CHANNEL, channelId));
+        try {
+            resultSet.next();
+            return userId == resultSet.getInt("creater_id");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static Channel getChannelById(int channelId) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d';", CONSTANT.TABLE.CHANNEL, channelId));
+        try {
+            resultSet.next();
+            String name = resultSet.getString("name");
+            String lastUpdate = resultSet.getString("last_update");
+            // for creater to use
+            return new Channel(channelId, CONSTANT.CHANNEL.CREATER, name, lastUpdate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

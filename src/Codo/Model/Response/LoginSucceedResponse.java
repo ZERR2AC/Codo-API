@@ -1,14 +1,15 @@
 package Codo.Model.Response;
 
+import Codo.Model.User;
 import Codo.Util.CONSTANT;
 
 public class LoginSucceedResponse extends Response {
     private String token;
-    private int user_id;
+    private User user;
 
-    public LoginSucceedResponse(String token, int user_id) {
+    public LoginSucceedResponse(String token, User user) {
         super(CONSTANT.STATE.OK, "ok");
         this.token = token;
-        this.user_id = user_id;
+        this.user = user;
     }
 }

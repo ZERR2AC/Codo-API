@@ -48,4 +48,22 @@
         <servlet-name>Channel</servlet-name>
         <url-pattern>/api/channel/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Reminders</servlet-name>
+        <servlet-class>Codo.Controller.Reminder.ReminderController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Reminders</servlet-name>
+        <url-pattern>/api/reminder/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Reminder</servlet-name>
+        <servlet-class>Codo.Controller.Reminder.RemindersController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Reminder</servlet-name>
+        <url-pattern>/api/reminder</url-pattern>
+    </servlet-mapping>
 </web-app>

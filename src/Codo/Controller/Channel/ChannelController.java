@@ -18,6 +18,7 @@ import java.io.PrintWriter;
  * Created by terrychan on 23/11/2016.
  */
 public class ChannelController extends HttpServlet {
+    // join or exit channel
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");

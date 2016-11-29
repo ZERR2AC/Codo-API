@@ -19,6 +19,7 @@ import java.io.PrintWriter;
  * Created by terrychan on 24/11/2016.
  */
 public class ChannelsController extends HttpServlet {
+    // get all channels in server
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");
@@ -33,6 +34,7 @@ public class ChannelsController extends HttpServlet {
         }
     }
 
+    // create a new channel
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String token = req.getParameter("token");
@@ -44,7 +46,7 @@ public class ChannelsController extends HttpServlet {
             String channelName = req.getParameter("name");
             Channel channel = Channel.newChannel(channelName, userId);
             if (channel == null) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "channel name has benn used.")));
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "channel name duplicated error.")));
             } else {
                 writer.write(Json.getGson().toJson(new CreateChannelSucceedResponse(channel)));
             }
