@@ -5,6 +5,8 @@ import Codo.Util.Database;
 import Codo.Util.Timestamp;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by terrychan on 27/11/2016.
@@ -20,10 +22,22 @@ public class PrivateReminder extends Reminder {
 
     public static PrivateReminder newPrivateReminder(String title, String content, String due, int priority, int createrId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
-                        "(title, creater_id, content, type, due, priority, last_update) " +
-                        "VALUE ('%s', '%d', '%s', '%d', '%s', '%d', '%s');",
-                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PRIVATE, due, priority, Timestamp.getTime())
+                        "(title, creater_id, type, priority, last_update) " +
+                        "VALUE ('%s', '%d', '%d', '%d', '%s');",
+                CONSTANT.TABLE.REMINDER, title, createrId, CONSTANT.REMINDER.PRIVATE, priority, Timestamp.getTime())
         );
+        if (!due.isEmpty()) {
+            Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET due='%s' ", due) +
+                    String.format("WHERE id='%d';", reminderId)
+            );
+        }
+        if (!content.isEmpty()) {
+            Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET content='%s' ", content) +
+                    String.format("WHERE id='%d';", reminderId)
+            );
+        }
         Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state, remark) VALUE ('%d', '%d', '%d', '%s')",
                 CONSTANT.TABLE.USER_REMINDER, createrId, reminderId, CONSTANT.REMINDER.UNDO, ""));
         if (reminderId == CONSTANT.STATE.DATABASE_ERROR) return null;
@@ -64,18 +78,27 @@ public class PrivateReminder extends Reminder {
     }
 
     public boolean save() {
-        String sql1 = String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+        List<String> sqls = new ArrayList<>();
+        sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
                 String.format("SET title='%s',", title) +
-                String.format("content='%s',", content) +
-                String.format("due='%s',", due) +
                 String.format("priority='%d',", priority) +
                 String.format("last_update='%s' ", Timestamp.getTime()) +
-                String.format("WHERE id='%d';", id);
-        String sql2 = String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
+                String.format("WHERE id='%d';", id));
+        if (!due.isEmpty())
+            sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET due='%s' ", due) +
+                    String.format("WHERE id='%d';", id));
+        if (!content.isEmpty())
+            sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET content='%s' ", content) +
+                    String.format("WHERE id='%d';", id));
+        sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
                 String.format("SET remark='%s',", remark) +
                 String.format("state='%d' ", state) +
-                String.format("WHERE reminder_id='%d' AND user_id='%d';", id, creater_id);
-        System.out.print(sql1);System.out.print(sql2);
-        return Database.update(sql1) && Database.update(sql2);
+                String.format("WHERE reminder_id='%d' AND user_id='%d';", id, creater_id));
+        for (String sql : sqls) {
+            if (!Database.update(sql)) return false;
+        }
+        return true;
     }
 }

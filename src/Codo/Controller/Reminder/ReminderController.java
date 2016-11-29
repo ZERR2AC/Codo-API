@@ -43,8 +43,10 @@ public class ReminderController extends HttpServlet {
                             if (title != null) privateReminder.title = title;
                             String content = req.getParameter("content");
                             if (content != null) privateReminder.content = content;
+                            else privateReminder.content = "";
                             String due = req.getParameter("due");
                             if (due != null) privateReminder.due = due;
+                            else privateReminder.due = "";
                             String remark = req.getParameter("remark");
                             if (remark != null) privateReminder.remark = remark;
                             String priority = req.getParameter("priority");
@@ -55,14 +57,15 @@ public class ReminderController extends HttpServlet {
                             if (privateReminder.save()) {
                                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "OK.")));
                             } else {
-                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail, mostly parameter error.")));
                             }
                         } else {
-                            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "not your reminder.")));
+                            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
                         }
                         break;
                     case CONSTANT.REMINDER.PUBLIC:
                         // TODO: 29/11/2016 分类处理，creater 或者是 listener
+
                         break;
                 }
             }

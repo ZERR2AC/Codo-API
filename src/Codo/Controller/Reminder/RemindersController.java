@@ -42,10 +42,12 @@ public class RemindersController extends HttpServlet {
         } else {
             String title = req.getParameter("title");
             String content = req.getParameter("content");
+            if (content == null) content = "";
             int type = Integer.parseInt(req.getParameter("type"));
             String due = req.getParameter("due");
+            if (due == null) due = "";
             int priority = Integer.parseInt(req.getParameter("priority"));
-            if (title.isEmpty() || content.isEmpty() || due.isEmpty()) {
+            if (title.isEmpty()) {
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PARAMETER_EMPTY, "parameter can not be empty.")));
             } else {
                 switch (type) {
