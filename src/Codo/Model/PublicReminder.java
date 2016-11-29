@@ -22,6 +22,7 @@ public class PublicReminder extends Reminder {
         this.channel = Channel.getChannelById(channel_id);
     }
 
+    // ORM: new object into database
     public static PublicReminder newPublicReminder(int createrId, String title, String content, String due, int priority, int channelId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
                         "(title, creater_id, content, type, due, priority, channel_id) " +
@@ -42,4 +43,13 @@ public class PublicReminder extends Reminder {
         return new PublicReminder(title, content, due, reminderId, priority, channelId, createrId);
     }
 
+    public static boolean isCreater(int reminder_id, int user_id) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d' AND creater_id='%d';", CONSTANT.TABLE.REMINDER, reminder_id, user_id));
+        try {
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

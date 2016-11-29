@@ -2,6 +2,7 @@ package Codo.Controller.Reminder;
 
 
 import Codo.Model.PrivateReminder;
+import Codo.Model.PublicReminder;
 import Codo.Model.Reminder;
 import Codo.Model.Response.Response;
 import Codo.Model.User;
@@ -22,15 +23,18 @@ public class ReminderController extends HttpServlet {
     // update reminder information
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // check token
         String token = req.getParameter("token");
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
+            // get reminder id
             String url = req.getRequestURI();
             String[] urls = url.split("/");
             int reminderId = Integer.parseInt(urls[urls.length - 1]);
+            // get reminder type
             int type = Reminder.getReminderTypeById(reminderId);
             if (type == CONSTANT.STATE.ID_NOT_FOUND) {
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ID_NOT_FOUND, "reminder not found.")));
@@ -39,21 +43,28 @@ public class ReminderController extends HttpServlet {
                     case CONSTANT.REMINDER.PRIVATE:
                         PrivateReminder privateReminder = PrivateReminder.getReminderById(reminderId);
                         if (privateReminder != null && privateReminder.ownReminder(userId)) {
+                            // get parameters
                             String title = req.getParameter("title");
                             if (title != null) privateReminder.title = title;
+
                             String content = req.getParameter("content");
                             if (content != null) privateReminder.content = content;
                             else privateReminder.content = "";
+
                             String due = req.getParameter("due");
                             if (due != null) privateReminder.due = due;
                             else privateReminder.due = "";
+
                             String remark = req.getParameter("remark");
                             if (remark != null) privateReminder.remark = remark;
+
                             String priority = req.getParameter("priority");
                             if (priority != null) privateReminder.priority = Integer.parseInt(priority);
+
                             String state = req.getParameter("state");
                             if (state != null) privateReminder.state = Integer.parseInt(state);
                             // TODO: 29/11/2016 Check parameter
+
                             if (privateReminder.save()) {
                                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "OK.")));
                             } else {
@@ -65,7 +76,14 @@ public class ReminderController extends HttpServlet {
                         break;
                     case CONSTANT.REMINDER.PUBLIC:
                         // TODO: 29/11/2016 分类处理，creater 或者是 listener
-
+                        if (PublicReminder.isCreater(reminderId, userId)) {
+                            // edit title content due
+                            // update all user_reminder last_update
+                            // update channel last_update
+                        } else {
+                            // edit remark and state
+                            // update user_reminder last_update
+                        }
                         break;
                 }
             }

@@ -20,12 +20,14 @@ public class PrivateReminder extends Reminder {
         super(title, content, due, state, remark, id, priority, CONSTANT.REMINDER.PRIVATE, createrId, last_update);
     }
 
+    // ORM: new object into database
     public static PrivateReminder newPrivateReminder(String title, String content, String due, int priority, int createrId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
                         "(title, creater_id, type, priority) " +
                         "VALUE ('%s', '%d', '%d', '%d');",
                 CONSTANT.TABLE.REMINDER, title, createrId, CONSTANT.REMINDER.PRIVATE, priority)
         );
+        // due and content is optional
         if (!due.isEmpty()) {
             Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
                     String.format("SET due='%s' ", due) +
@@ -44,9 +46,11 @@ public class PrivateReminder extends Reminder {
         return new PrivateReminder(title, content, due, reminderId, priority, createrId);
     }
 
+    // return null if id is invalid or database error
     public static PrivateReminder getReminderById(int reminderId) {
         String title = "", content = "", due = "", remark, lastUpdate;
         int priority = -1, createrId = -1, state;
+        // get information from table reminder
         ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d';", CONSTANT.TABLE.REMINDER, reminderId));
         try {
             if (resultSet.next()) {
@@ -61,6 +65,7 @@ public class PrivateReminder extends Reminder {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // get information from table user_reminder
         resultSet = Database.query(String.format("SELECT * FROM %s WHERE reminder_id='%d' AND user_id='%d';", CONSTANT.TABLE.USER_REMINDER, reminderId, createrId));
         try {
             if (resultSet.next()) {
@@ -77,6 +82,7 @@ public class PrivateReminder extends Reminder {
         return null;
     }
 
+    // ORM: save a object into database
     public boolean save() {
         List<String> sqls = new ArrayList<>();
         sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
