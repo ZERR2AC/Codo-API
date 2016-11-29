@@ -64,7 +64,7 @@ public class Channel {
     }
 
     public static boolean joinChannel(int userId, int channelId) {
-        return Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
+        return !isCreater(channelId, userId) && Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
     }
 
     public static boolean exitChannel(int userId, int channelId) {

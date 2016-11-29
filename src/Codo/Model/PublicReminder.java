@@ -24,17 +24,17 @@ public class PublicReminder extends Reminder {
 
     public static PublicReminder newPublicReminder(int createrId, String title, String content, String due, int priority, int channelId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
-                        "(title, creater_id, content, type, due, priority, channel_id, last_update) " +
-                        "VALUE ('%s', '%d', '%s', '%d', '%s', '%d', '%d', '%s');",
-                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PUBLIC, due, priority, channelId, Timestamp.getTime())
+                        "(title, creater_id, content, type, due, priority, channel_id) " +
+                        "VALUE ('%s', '%d', '%s', '%d', '%s', '%d', '%d');",
+                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PUBLIC, due, priority, channelId)
         );
         if (reminderId == CONSTANT.STATE.DATABASE_ERROR) return null;
         ResultSet resultSet = Channel.getUserIdInChannel(channelId);
         try {
             while (resultSet.next()) {
                 int userId = resultSet.getInt("user_id");
-                Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state) VALUE ('%d', '%d', '%d')",
-                        CONSTANT.TABLE.USER_REMINDER, userId, reminderId, CONSTANT.REMINDER.UNDO));
+                Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state, last_update, remark) VALUE ('%d', '%d', '%d', '%s', '')",
+                        CONSTANT.TABLE.USER_REMINDER, userId, reminderId, CONSTANT.REMINDER.UNDO, Timestamp.getTime()));
             }
         } catch (Exception e) {
             e.printStackTrace();

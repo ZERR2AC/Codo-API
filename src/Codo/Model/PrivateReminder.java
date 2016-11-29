@@ -22,9 +22,9 @@ public class PrivateReminder extends Reminder {
 
     public static PrivateReminder newPrivateReminder(String title, String content, String due, int priority, int createrId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
-                        "(title, creater_id, type, priority, last_update) " +
-                        "VALUE ('%s', '%d', '%d', '%d', '%s');",
-                CONSTANT.TABLE.REMINDER, title, createrId, CONSTANT.REMINDER.PRIVATE, priority, Timestamp.getTime())
+                        "(title, creater_id, type, priority) " +
+                        "VALUE ('%s', '%d', '%d', '%d');",
+                CONSTANT.TABLE.REMINDER, title, createrId, CONSTANT.REMINDER.PRIVATE, priority)
         );
         if (!due.isEmpty()) {
             Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
@@ -38,14 +38,14 @@ public class PrivateReminder extends Reminder {
                     String.format("WHERE id='%d';", reminderId)
             );
         }
-        Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state, remark) VALUE ('%d', '%d', '%d', '%s')",
-                CONSTANT.TABLE.USER_REMINDER, createrId, reminderId, CONSTANT.REMINDER.UNDO, ""));
+        Database.update(String.format("INSERT INTO %s (user_id, reminder_id, state, remark, last_update) VALUE ('%d', '%d', '%d', '%s', '%s')",
+                CONSTANT.TABLE.USER_REMINDER, createrId, reminderId, CONSTANT.REMINDER.UNDO, "", Timestamp.getTime()));
         if (reminderId == CONSTANT.STATE.DATABASE_ERROR) return null;
         return new PrivateReminder(title, content, due, reminderId, priority, createrId);
     }
 
     public static PrivateReminder getReminderById(int reminderId) {
-        String title = "", content = "", due = "", remark, lastUpdate = "";
+        String title = "", content = "", due = "", remark, lastUpdate;
         int priority = -1, createrId = -1, state;
         ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE id='%d';", CONSTANT.TABLE.REMINDER, reminderId));
         try {
@@ -53,7 +53,6 @@ public class PrivateReminder extends Reminder {
                 title = resultSet.getString("title");
                 content = resultSet.getString("content");
                 due = resultSet.getString("due");
-                lastUpdate = resultSet.getString("last_update");
                 priority = resultSet.getInt("priority");
                 createrId = resultSet.getInt("creater_id");
             } else {
@@ -62,11 +61,12 @@ public class PrivateReminder extends Reminder {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        resultSet = Database.query(String.format(String.format("SELECT * FROM %s WHERE reminder_id='%d' AND user_id='%d';", CONSTANT.TABLE.USER_REMINDER, reminderId, createrId)));
+        resultSet = Database.query(String.format("SELECT * FROM %s WHERE reminder_id='%d' AND user_id='%d';", CONSTANT.TABLE.USER_REMINDER, reminderId, createrId));
         try {
             if (resultSet.next()) {
                 state = resultSet.getInt("state");
                 remark = resultSet.getString("remark");
+                lastUpdate = resultSet.getString("last_update");
                 return new PrivateReminder(title, content, due, reminderId, priority, createrId, state, remark, lastUpdate);
             } else {
                 return null;
@@ -81,8 +81,7 @@ public class PrivateReminder extends Reminder {
         List<String> sqls = new ArrayList<>();
         sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
                 String.format("SET title='%s',", title) +
-                String.format("priority='%d',", priority) +
-                String.format("last_update='%s' ", Timestamp.getTime()) +
+                String.format("priority='%d' ", priority) +
                 String.format("WHERE id='%d';", id));
         if (!due.isEmpty())
             sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
@@ -94,7 +93,8 @@ public class PrivateReminder extends Reminder {
                     String.format("WHERE id='%d';", id));
         sqls.add(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
                 String.format("SET remark='%s',", remark) +
-                String.format("state='%d' ", state) +
+                String.format("state='%d',", state) +
+                String.format("last_update='%s' ", Timestamp.getTime()) +
                 String.format("WHERE reminder_id='%d' AND user_id='%d';", id, creater_id));
         for (String sql : sqls) {
             if (!Database.update(sql)) return false;
