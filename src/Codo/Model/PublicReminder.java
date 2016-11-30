@@ -25,11 +25,15 @@ public class PublicReminder extends Reminder {
     // ORM: new object into database
     public static PublicReminder newPublicReminder(int createrId, String title, String content, String due, int priority, int channelId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
-                        "(title, creater_id, content, type, due, priority, channel_id) " +
-                        "VALUE ('%s', '%d', '%s', '%d', '%s', '%d', '%d');",
-                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PUBLIC, due, priority, channelId)
+                        "(title, creater_id, content, type, priority, channel_id) " +
+                        "VALUE ('%s', '%d', '%s', '%d', '%d', '%d');",
+                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PUBLIC, priority, channelId)
         );
         if (reminderId == CONSTANT.STATE.DATABASE_ERROR) return null;
+        if (!due.isEmpty())
+            Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET due='%s' ", due) +
+                    String.format("WHERE id='%d';", reminderId));
         ResultSet resultSet = Channel.getUserIdInChannel(channelId);
         try {
             while (resultSet.next()) {
