@@ -12,8 +12,8 @@ import java.util.List;
  * Created by terrychan on 24/11/2016.
  */
 public class Channel {
-    private int id, type;
-    private String name, last_upate;
+    public int id, type;
+    public String name, last_upate;
 
     public Channel(int id, int type, String name, String last_upate) {
         this.id = id;
@@ -64,7 +64,7 @@ public class Channel {
     }
 
     public static boolean joinChannel(int userId, int channelId) {
-        return !isCreater(channelId, userId) && Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
+        return Database.update(String.format("INSERT INTO %s (user_id, channel_id) VALUE ('%d','%d');", CONSTANT.TABLE.USER_CHANNEL, userId, channelId));
     }
 
     public static boolean exitChannel(int userId, int channelId) {

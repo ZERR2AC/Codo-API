@@ -25,11 +25,15 @@ public class PublicReminder extends Reminder {
     // ORM: new object into database
     public static PublicReminder newPublicReminder(int createrId, String title, String content, String due, int priority, int channelId) {
         int reminderId = Database.insert(String.format("INSERT INTO %s " +
-                        "(title, creater_id, content, type, due, priority, channel_id) " +
-                        "VALUE ('%s', '%d', '%s', '%d', '%s', '%d', '%d');",
-                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PUBLIC, due, priority, channelId)
+                        "(title, creater_id, content, type, priority, channel_id) " +
+                        "VALUE ('%s', '%d', '%s', '%d', '%d', '%d');",
+                CONSTANT.TABLE.REMINDER, title, createrId, content, CONSTANT.REMINDER.PUBLIC, priority, channelId)
         );
         if (reminderId == CONSTANT.STATE.DATABASE_ERROR) return null;
+        if (!due.isEmpty())
+            Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.REMINDER) +
+                    String.format("SET due='%s' ", due) +
+                    String.format("WHERE id='%d';", reminderId));
         ResultSet resultSet = Channel.getUserIdInChannel(channelId);
         try {
             while (resultSet.next()) {
@@ -97,9 +101,10 @@ public class PublicReminder extends Reminder {
     }
 
     public static boolean updateRemark(int reminderId, int userId, String remark) {
+        // TODO: 29/11/2016 Check parameter
         return Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
                 String.format("SET remark='%s',", remark) +
-                String.format("SET last_update='%s',", Timestamp.getTime()) +
+                String.format("last_update='%s' ", Timestamp.getTime()) +
                 String.format("WHERE reminder_id='%d' AND user_id='%d';", reminderId, userId));
 
     }
@@ -108,7 +113,7 @@ public class PublicReminder extends Reminder {
         // TODO: 29/11/2016 Check parameter
         return Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
                 String.format("SET state='%d',", state) +
-                String.format("SET last_update='%s',", Timestamp.getTime()) +
+                String.format("last_update='%s' ", Timestamp.getTime()) +
                 String.format("WHERE reminder_id='%d' AND user_id='%d';", reminderId, userId));
 
     }

@@ -48,6 +48,7 @@ public class ChannelsController extends HttpServlet {
             if (channel == null) {
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "channel name duplicated error.")));
             } else {
+                Channel.joinChannel(userId, channel.id);
                 writer.write(Json.getGson().toJson(new CreateChannelSucceedResponse(channel)));
             }
         }

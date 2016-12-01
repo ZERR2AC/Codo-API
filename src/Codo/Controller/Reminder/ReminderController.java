@@ -88,6 +88,22 @@ public class ReminderController extends HttpServlet {
                             String priority = req.getParameter("priority");
                             if (priority == null) priority = "";
 
+                            String remark = req.getParameter("remark");
+                            if (remark != null) {
+                                if (!PublicReminder.updateRemark(reminderId, userId, remark)) {
+                                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                    return;
+                                }
+                            }
+
+                            String state = req.getParameter("state");
+                            if (state != null) {
+                                if (!PublicReminder.updateState(reminderId, userId, Integer.parseInt(state))) {
+                                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                    return;
+                                }
+                            }
+
                             if (!PublicReminder.update(reminderId, title, content, due, priority)) {
                                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                                 return;
