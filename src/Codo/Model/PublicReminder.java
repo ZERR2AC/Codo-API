@@ -101,9 +101,10 @@ public class PublicReminder extends Reminder {
     }
 
     public static boolean updateRemark(int reminderId, int userId, String remark) {
+        // TODO: 29/11/2016 Check parameter
         return Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
                 String.format("SET remark='%s',", remark) +
-                String.format("SET last_update='%s',", Timestamp.getTime()) +
+                String.format("last_update='%s' ", Timestamp.getTime()) +
                 String.format("WHERE reminder_id='%d' AND user_id='%d';", reminderId, userId));
 
     }
@@ -112,7 +113,7 @@ public class PublicReminder extends Reminder {
         // TODO: 29/11/2016 Check parameter
         return Database.update(String.format("UPDATE %s ", CONSTANT.TABLE.USER_REMINDER) +
                 String.format("SET state='%d',", state) +
-                String.format("SET last_update='%s',", Timestamp.getTime()) +
+                String.format("last_update='%s' ", Timestamp.getTime()) +
                 String.format("WHERE reminder_id='%d' AND user_id='%d';", reminderId, userId));
 
     }
