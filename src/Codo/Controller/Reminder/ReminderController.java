@@ -62,13 +62,13 @@ public class ReminderController extends HttpServlet {
                             if (state != null) privateReminder.state = Integer.parseInt(state);
                             // TODO: 29/11/2016 Check parameter
 
-                            if (privateReminder.save()) {
-                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "OK.")));
-                            } else {
+                            if (!privateReminder.save()) {
                                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail, mostly parameter error.")));
+                                return;
                             }
                         } else {
                             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                            return;
                         }
                         break;
                     case CONSTANT.REMINDER.PUBLIC:
