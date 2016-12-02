@@ -27,6 +27,7 @@ public class Channel {
      * @return channel id
      */
     public static Channel newChannel(String name, int createrId) {
+        if (name.trim().isEmpty()) return null;
         int id = Database.insert(String.format("INSERT INTO %s (name, creater_id, last_update) VALUES('%s', '%d', '%s');", CONSTANT.TABLE.CHANNEL, name, createrId, Timestamp.getTime()));
         if (id != CONSTANT.STATE.DATABASE_ERROR) {
             return new Channel(id, CONSTANT.CHANNEL.CREATER, name, Timestamp.getTime());
