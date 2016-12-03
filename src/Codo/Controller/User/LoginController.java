@@ -22,8 +22,8 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
 
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        String username = req.getParameter("username").trim();
+        String password = req.getParameter("password").trim();
 
         if (username.isEmpty() || password.isEmpty()) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));

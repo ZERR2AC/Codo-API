@@ -26,6 +26,7 @@ public class ReminderController extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            return;
         } else {
             // get reminder id
             String url = req.getRequestURI();
@@ -35,6 +36,7 @@ public class ReminderController extends HttpServlet {
             int type = Reminder.getReminderTypeById(reminderId);
             if (type == CONSTANT.STATE.ID_NOT_FOUND) {
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ID_NOT_FOUND, "reminder not found.")));
+                return;
             } else {
                 switch (type) {
                     case CONSTANT.REMINDER.PRIVATE:
@@ -62,13 +64,13 @@ public class ReminderController extends HttpServlet {
                             if (state != null) privateReminder.state = Integer.parseInt(state);
                             // TODO: 29/11/2016 Check parameter
 
-                            if (privateReminder.save()) {
-                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "OK.")));
-                            } else {
+                            if (!privateReminder.save()) {
                                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail, mostly parameter error.")));
+                                return;
                             }
                         } else {
                             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                            return;
                         }
                         break;
                     case CONSTANT.REMINDER.PUBLIC:
@@ -129,6 +131,7 @@ public class ReminderController extends HttpServlet {
                         break;
                 }
                 writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+                return;
             }
         }
     }
@@ -141,6 +144,7 @@ public class ReminderController extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            return;
         } else {
             // get reminder id
             String url = req.getRequestURI();
@@ -151,12 +155,14 @@ public class ReminderController extends HttpServlet {
                     writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
                 } else {
                     writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                    return;
                 }
             } else {
                 if (Reminder.subscribeDelete(reminderId, userId)) {
                     writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
                 } else {
                     writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                    return;
                 }
             }
         }

@@ -29,8 +29,16 @@ public class ChannelController extends HttpServlet {
         } else {
             String url = req.getRequestURI();
             String[] urls = url.split("/");
-            int channelId = Integer.parseInt(urls[urls.length - 1]);
-            int action = Integer.parseInt(req.getParameter("action"));
+            int channelId;
+            int action;
+            try {
+                channelId = Integer.parseInt(urls[urls.length - 1]);
+                action = Integer.parseInt(req.getParameter("action"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PARAMETER_EMPTY, "parameter invalid.")));
+                return;
+            }
             switch (action) {
                 case CONSTANT.CHANNEL.ACTION_JOIN:
                     if (Channel.joinChannel(userId, channelId))

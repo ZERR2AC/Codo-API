@@ -20,8 +20,8 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter writer = resp.getWriter();
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        String username = req.getParameter("username").trim();
+        String password = req.getParameter("password").trim();
         System.out.print(username + password);
         if (username.isEmpty() || password.isEmpty()) {
             writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PARAMETER_EMPTY, "parameter is empty.")));
