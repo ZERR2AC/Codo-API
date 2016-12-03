@@ -56,6 +56,14 @@ public class Reminder {
                     case CONSTANT.REMINDER.PUBLIC:
                         int channelId = resultSet.getInt("channel_id");
                         reminders.add(new PublicReminder(title, content, due, id, priority, channelId, createrId, state, remark, lastUpdate));
+                        PublicReminder publicReminder = (PublicReminder) reminders.get(reminders.size() - 1);
+                        Channel channel = publicReminder.channel;
+                        if (Channel.isCreater(channelId, userId))
+                            channel.type = CONSTANT.CHANNEL.CREATER;
+                        else if (Channel.inChannel(userId, channelId))
+                            channel.type = CONSTANT.CHANNEL.SUBSCRIBE;
+                        else
+                            channel.type = CONSTANT.CHANNEL.UNSUBSCRIBE;
                         break;
                     case CONSTANT.REMINDER.PRIVATE:
                         reminders.add(new PrivateReminder(title, content, due, id, priority, createrId, state, remark, lastUpdate));

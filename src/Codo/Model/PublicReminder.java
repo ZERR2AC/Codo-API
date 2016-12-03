@@ -10,7 +10,7 @@ import java.sql.ResultSet;
  * Created by terrychan on 27/11/2016.
  */
 public class PublicReminder extends Reminder {
-    private Channel channel;
+    public Channel channel;
 
     public PublicReminder(String title, String content, String due, int id, int priority, int channel_id, int creater_id) {
         super(title, content, due, id, priority, CONSTANT.REMINDER.PUBLIC, creater_id);
