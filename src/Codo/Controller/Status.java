@@ -1,6 +1,6 @@
 package Codo.Controller;
 
-import Codo.Model.Response.Response;
+import Codo.Model.Response.JsonResponse;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
@@ -16,11 +16,11 @@ import java.io.PrintWriter;
  * Created by terrychan on 23/11/2016.
  */
 
-public class Status extends HttpServlet {
-
+public class Status extends Controller {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "OK!")));
+        super.doGet(req, resp);
+        JsonResponse jsonResponse = new JsonResponse(CONSTANT.STATE.OK, "ok.", writer);
+        jsonResponse.makeResponse();
     }
 }

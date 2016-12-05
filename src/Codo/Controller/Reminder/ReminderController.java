@@ -2,7 +2,7 @@ package Codo.Controller.Reminder;
 
 
 import Codo.Model.*;
-import Codo.Model.Response.Response;
+import Codo.Model.Response.JsonResponse;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
@@ -25,7 +25,7 @@ public class ReminderController extends HttpServlet {
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
             return;
         } else {
             // get reminder id
@@ -35,7 +35,7 @@ public class ReminderController extends HttpServlet {
             // get reminder type
             int type = Reminder.getReminderTypeById(reminderId);
             if (type == CONSTANT.STATE.ID_NOT_FOUND) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ID_NOT_FOUND, "reminder not found.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ID_NOT_FOUND, "reminder not found.")));
                 return;
             } else {
                 switch (type) {
@@ -65,11 +65,11 @@ public class ReminderController extends HttpServlet {
                             // TODO: 29/11/2016 Check parameter
 
                             if (!privateReminder.save()) {
-                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail, mostly parameter error.")));
+                                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail, mostly parameter error.")));
                                 return;
                             }
                         } else {
-                            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
                             return;
                         }
                         break;
@@ -93,7 +93,7 @@ public class ReminderController extends HttpServlet {
                             String remark = req.getParameter("remark");
                             if (remark != null) {
                                 if (!PublicReminder.updateRemark(reminderId, userId, remark)) {
-                                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                                     return;
                                 }
                             }
@@ -101,13 +101,13 @@ public class ReminderController extends HttpServlet {
                             String state = req.getParameter("state");
                             if (state != null) {
                                 if (!PublicReminder.updateState(reminderId, userId, Integer.parseInt(state))) {
-                                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                                     return;
                                 }
                             }
 
                             if (!PublicReminder.update(reminderId, title, content, due, priority)) {
-                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                                 return;
                             }
                         } else {
@@ -117,20 +117,20 @@ public class ReminderController extends HttpServlet {
                             String state = req.getParameter("state");
                             if (remark != null) {
                                 if (!PublicReminder.updateRemark(reminderId, userId, remark)) {
-                                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                                     return;
                                 }
                             }
                             if (state != null) {
                                 if (!PublicReminder.updateState(reminderId, userId, Integer.parseInt(state))) {
-                                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                                     return;
                                 }
                             }
                         }
                         break;
                 }
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.OK, "ok.")));
                 return;
             }
         }
@@ -143,7 +143,7 @@ public class ReminderController extends HttpServlet {
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
             return;
         } else {
             // get reminder id
@@ -152,16 +152,16 @@ public class ReminderController extends HttpServlet {
             int reminderId = Integer.parseInt(urls[urls.length - 1]);
             if (Reminder.isCreater(reminderId, userId)) {
                 if (Reminder.createrDelete(reminderId)) {
-                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.OK, "ok.")));
                 } else {
-                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
+                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "action fail.")));
                     return;
                 }
             } else {
                 if (Reminder.subscribeDelete(reminderId, userId)) {
-                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.OK, "ok.")));
                 } else {
-                    writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
+                    writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.PERMISSION_DENY, "permission deny.")));
                     return;
                 }
             }

@@ -1,7 +1,8 @@
-package Codo.Model;
+package pub.codo.Model;
 
-import Codo.Util.CONSTANT;
-import Codo.Util.Database;
+
+import pub.codo.Util.CONSTANT;
+import pub.codo.Util.Database;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,11 +14,45 @@ import java.util.Date;
  */
 public class User {
     private int id;
-    private String username;
+    private String username, password, token;
 
     public User(int id, String username) {
         this.id = id;
         this.username = username;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public boolean create() {
+        id = Database.insert(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');",
+                CONSTANT.TABLE.USER, username, passwordHash(username, password)));
+        return id != CONSTANT.STATE.DATABASE_ERROR;
+    }
+
+    public static User login(String username, String password) {
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';",
+                CONSTANT.TABLE.USER, username, passwordHash(username, password)));
+        try {
+            if (resultSet.next()) {
+                User user = new User(resultSet.getInt("id"), resultSet.getString("username"));
+                user.createToken();
+                return user;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void createToken() {
+        token = tokenHash(username);
+        Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%d', '%s');",
+                CONSTANT.TABLE.TOKEN, id, token));
     }
 
     private static String convertToHexString(byte[] bytes) {
@@ -92,7 +127,8 @@ public class User {
      * @return true if username and password match
      */
     private static boolean checkPassword(String username, String password) {
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';", CONSTANT.TABLE.USER, username, passwordHash(username, password)));
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';",
+                CONSTANT.TABLE.USER, username, passwordHash(username, password)));
         try {
             return resultSet.next();
         } catch (Exception e) {
@@ -101,21 +137,6 @@ public class User {
         }
     }
 
-    /**
-     * @param username username
-     * @param password password
-     * @return token if username and password match else a empty String
-     */
-    public static String createToken(String username, String password) {
-        if (checkPassword(username, password)) {
-            String token = tokenHash(username);
-            int id = getIdByName(username);
-            Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%d', '%s');", CONSTANT.TABLE.TOKEN, id, token));
-            return token;
-        } else {
-            return "";
-        }
-    }
 
     public static User getUserByToken(String token) {
         ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE token='%s';", CONSTANT.TABLE.TOKEN, token));

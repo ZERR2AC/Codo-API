@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * Created by terrychan on 25/11/2016.
  */
-public class GetChannelsSucceedResponse extends Response {
+public class GetChannelsSucceedJsonResponse extends JsonResponse {
     List<Channel> channels;
 
-    public GetChannelsSucceedResponse(List<Channel> channels) {
+    public GetChannelsSucceedJsonResponse(List<Channel> channels) {
         super(CONSTANT.STATE.OK, "ok.");
         this.channels = channels;
     }

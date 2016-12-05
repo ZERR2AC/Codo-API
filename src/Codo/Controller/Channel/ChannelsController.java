@@ -1,9 +1,9 @@
 package Codo.Controller.Channel;
 
 import Codo.Model.Channel;
-import Codo.Model.Response.CreateChannelSucceedResponse;
-import Codo.Model.Response.GetChannelsSucceedResponse;
-import Codo.Model.Response.Response;
+import Codo.Model.Response.CreateChannelSucceedJsonResponse;
+import Codo.Model.Response.GetChannelsSucceedJsonResponse;
+import Codo.Model.Response.JsonResponse;
 import Codo.Model.User;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
@@ -26,11 +26,11 @@ public class ChannelsController extends HttpServlet {
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
             String type = req.getParameter("type");
             if (type == null) type = "";
-            writer.write(Json.getGson().toJson(new GetChannelsSucceedResponse(Channel.getChannels(userId, type))));
+            writer.write(Json.getGson().toJson(new GetChannelsSucceedJsonResponse(Channel.getChannels(userId, type))));
         }
     }
 
@@ -41,15 +41,15 @@ public class ChannelsController extends HttpServlet {
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
             String channelName = req.getParameter("name");
             Channel channel = Channel.newChannel(channelName, userId);
             if (channel == null) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "channel name duplicated error.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.NAME_DUPLICATED, "channel name duplicated error.")));
             } else {
                 Channel.joinChannel(userId, channel.id);
-                writer.write(Json.getGson().toJson(new CreateChannelSucceedResponse(channel)));
+                writer.write(Json.getGson().toJson(new CreateChannelSucceedJsonResponse(channel)));
             }
         }
     }

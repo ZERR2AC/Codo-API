@@ -1,9 +1,9 @@
 package Codo.Controller.Reminder;
 
 import Codo.Model.*;
-import Codo.Model.Response.CreateReminderSucceedResponse;
-import Codo.Model.Response.GetRemindersSucceedResponse;
-import Codo.Model.Response.Response;
+import Codo.Model.Response.CreateReminderSucceedJsonResponse;
+import Codo.Model.Response.GetRemindersSucceedJsonResponse;
+import Codo.Model.Response.JsonResponse;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
 
@@ -25,9 +25,9 @@ public class RemindersController extends HttpServlet {
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
-            writer.write(Json.getGson().toJson(new GetRemindersSucceedResponse(Reminder.getRemindersByUserId(userId))));
+            writer.write(Json.getGson().toJson(new GetRemindersSucceedJsonResponse(Reminder.getRemindersByUserId(userId))));
         }
     }
 
@@ -38,7 +38,7 @@ public class RemindersController extends HttpServlet {
         int userId = User.getIdByToken(token);
         PrintWriter writer = resp.getWriter();
         if (userId == CONSTANT.STATE.ID_NOT_FOUND) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.")));
         } else {
             String title = req.getParameter("title");
             String content = req.getParameter("content");
@@ -48,7 +48,7 @@ public class RemindersController extends HttpServlet {
             if (due == null) due = "";
             int priority = Integer.parseInt(req.getParameter("priority"));
             if (title.isEmpty()) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PARAMETER_EMPTY, "parameter can not be empty.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.PARAMETER_EMPTY, "parameter can not be empty.")));
             } else {
                 switch (type) {
                     case CONSTANT.REMINDER.PUBLIC:
@@ -56,17 +56,17 @@ public class RemindersController extends HttpServlet {
                         if (Channel.hasChannel(channelId) && Channel.isCreater(channelId, userId)) {
                             PublicReminder publicReminder = PublicReminder.newPublicReminder(userId, title, content, due, priority, channelId);
                             if (publicReminder != null)
-                                writer.write(Json.getGson().toJson(new CreateReminderSucceedResponse(publicReminder)));
+                                writer.write(Json.getGson().toJson(new CreateReminderSucceedJsonResponse(publicReminder)));
                             else
-                                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ACTION_FAIL, "unknow error.")));
+                                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ACTION_FAIL, "unknow error.")));
                         } else {
-                            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.ID_NOT_FOUND, "channel id error.")));
+                            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.ID_NOT_FOUND, "channel id error.")));
                         }
                         break;
                     case CONSTANT.REMINDER.PRIVATE:
                         // TODO: 29/11/2016 可以添加 remark
                         PrivateReminder privateReminder = PrivateReminder.newPrivateReminder(title, content, due, priority, userId);
-                        writer.write(Json.getGson().toJson(new CreateReminderSucceedResponse(privateReminder)));
+                        writer.write(Json.getGson().toJson(new CreateReminderSucceedJsonResponse(privateReminder)));
                         break;
                 }
             }

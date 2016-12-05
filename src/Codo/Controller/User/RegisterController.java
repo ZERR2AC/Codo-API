@@ -1,6 +1,6 @@
 package Codo.Controller.User;
 
-import Codo.Model.Response.Response;
+import Codo.Model.Response.JsonResponse;
 import Codo.Model.User;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
@@ -22,14 +22,13 @@ public class RegisterController extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         String username = req.getParameter("username").trim();
         String password = req.getParameter("password").trim();
-        System.out.print(username + password);
         if (username.isEmpty() || password.isEmpty()) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PARAMETER_EMPTY, "parameter is empty.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.PARAMETER_EMPTY, "parameter is empty.")));
         } else {
             if (User.doRegister(username, password)) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.OK, "ok.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.OK, "ok.")));
             } else {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.")));
             }
         }
     }

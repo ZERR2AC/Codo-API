@@ -1,7 +1,8 @@
 package Codo.Controller.User;
 
-import Codo.Model.Response.LoginSucceedResponse;
-import Codo.Model.Response.Response;
+import Codo.Controller.Controller;
+import Codo.Model.Response.LoginSucceedJsonResponse;
+import Codo.Model.Response.JsonResponse;
 import Codo.Model.User;
 import Codo.Util.CONSTANT;
 import Codo.Util.Json;
@@ -26,14 +27,14 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password").trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
+            writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
         } else {
             String token = User.createToken(username, password);
             if (token.isEmpty()) {
-                writer.write(Json.getGson().toJson(new Response(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
+                writer.write(Json.getGson().toJson(new JsonResponse(CONSTANT.STATE.PASSWORD_MISSMATCH, "username and password missmatch.")));
             } else {
                 int user_id = User.getIdByName(username);
-                writer.write(Json.getGson().toJson(new LoginSucceedResponse(token, new User(user_id, username))));
+                writer.write(Json.getGson().toJson(new LoginSucceedJsonResponse(token, new User(user_id, username))));
             }
         }
     }
