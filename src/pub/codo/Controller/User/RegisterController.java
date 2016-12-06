@@ -18,20 +18,14 @@ public class RegisterController extends Controller {
         super.doPost(req, resp);
         String[] parameters = {"username", "password"};
 
+        // empty username or password
         if (require(parameters) && notEmpty(parameters)) {
             String username = req.getParameter("username").trim();
             String password = req.getParameter("password").trim();
-            User user = new User(username, password);
-            if (user.create()) {
-                setResponse(CONSTANT.STATE.OK, "ok.");
-                makeResponse();
-            } else {
-                setResponse(CONSTANT.STATE.ACTION_FAIL, "username has benn used.");
-                makeResponse();
-            }
-        } else {
-            setResponse(CONSTANT.STATE.PARAMETER_EMPTY, "parameter invalid.");
-            makeResponse();
-        }
+            User user = User.create(username, password);
+            // object create fail, username must be unique
+            if (user == null) setResponse(CONSTANT.STATE.ACTION_FAIL, "username has benn used.");
+        } else setResponse(CONSTANT.STATE.PARAMETER_ERROR, "parameter invalid.");
+        makeResponse();
     }
 }

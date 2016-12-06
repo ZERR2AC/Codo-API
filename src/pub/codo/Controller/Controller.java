@@ -1,6 +1,8 @@
 package pub.codo.Controller;
 
+import pub.codo.Model.Channel;
 import pub.codo.Model.User;
+import pub.codo.Util.CONSTANT;
 import pub.codo.Util.Json;
 
 import javax.servlet.ServletException;
@@ -9,13 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by terrychan on 05/12/2016.
  */
 public class Controller extends HttpServlet {
     PrintWriter writer;
-    User user;
+    protected User user;
     HttpServletRequest httpServletRequest;
     HttpServletResponse httpServletResponse;
     JsonResponse jsonResponse;
@@ -32,7 +35,7 @@ public class Controller extends HttpServlet {
         }
     }
 
-    private void init(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void init(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         httpServletRequest = req;
         httpServletResponse = resp;
         jsonResponse = new JsonResponse();
@@ -64,15 +67,25 @@ public class Controller extends HttpServlet {
         jsonResponse.user = user;
     }
 
+    public void setResponseChannel(Channel channel) {
+        jsonResponse.channel = channel;
+    }
+
+    public void setResponseChannels(List<Channel> channels) {
+        jsonResponse.channels = channels;
+    }
+
     public void makeResponse() {
         writer.write(Json.getGson().toJson(jsonResponse));
         writer.close();
     }
 
     class JsonResponse {
-        int ret;
-        String msg;
+        int ret = CONSTANT.STATE.OK;
+        String msg = "ok.";
         User user;
+        List<Channel> channels;
+        Channel channel;
     }
 
     public boolean require(String[] parameters) {
@@ -84,9 +97,23 @@ public class Controller extends HttpServlet {
 
     public boolean notEmpty(String[] parameters) {
         for (String parameter : parameters) {
-            if (httpServletRequest.getParameter(parameter).trim().isEmpty()) return false;
+            String value = httpServletRequest.getParameter(parameter);
+            if (value != null && value.trim().isEmpty()) return false;
         }
         return true;
+    }
+
+    public boolean in(String parameter, int[] acceptedValues) {
+        boolean isIn = false;
+        try {
+            String value = httpServletRequest.getParameter(parameter);
+            for (int ac_value : acceptedValues) {
+                if (value == null || Integer.parseInt(value) == ac_value) isIn = true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return isIn;
     }
 }
 

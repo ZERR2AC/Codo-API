@@ -31,7 +31,7 @@ public interface CONSTANT {
         int DATABASE_ERROR = -2;
         int NAME_DUPLICATED = 1;
         int PASSWORD_MISSMATCH = 2;
-        int PARAMETER_EMPTY = 3;
+        int PARAMETER_ERROR = 3;
         int TOKEN_INVALID = 10;
         int PERMISSION_DENY = 11;
         int ACTION_FAIL = 20;

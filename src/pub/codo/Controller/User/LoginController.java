@@ -18,21 +18,15 @@ public class LoginController extends Controller {
         super.doPost(req, resp);
         String[] parameters = {"username", "password"};
 
+        // empty username or password
         if (require(parameters) && notEmpty(parameters)) {
             String username = req.getParameter("username").trim();
             String password = req.getParameter("password").trim();
             User user = User.login(username, password);
-            if (user == null) {
-                setResponse(CONSTANT.STATE.PASSWORD_MISSMATCH, "username or password mismatch.");
-                makeResponse();
-            } else {
-                setResponse(CONSTANT.STATE.OK, "ok.");
-                setResponseUser(user);
-                makeResponse();
-            }
-        } else {
-            setResponse(CONSTANT.STATE.PARAMETER_EMPTY, "parameter invalid.");
-            makeResponse();
-        }
+            // user not found
+            if (user == null) setResponse(CONSTANT.STATE.PASSWORD_MISSMATCH, "username or password mismatch.");
+            else setResponseUser(user);
+        } else setResponse(CONSTANT.STATE.PARAMETER_ERROR, "parameter invalid.");
+        makeResponse();
     }
 }

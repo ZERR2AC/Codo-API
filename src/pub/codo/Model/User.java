@@ -13,28 +13,37 @@ import java.util.Date;
  * Created by terrychan on 23/11/2016.
  */
 public class User {
-    private int id;
-    private String username, password, token;
+    public int getId() {
+        return id;
+    }
 
-    public User(int id, String username) {
+    public String getUsername() {
+        return username;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    private int id;
+    private String username, token;
+
+    private User(int id, String username) {
         this.id = id;
         this.username = username;
     }
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    public static User create(String username, String password) {
+        int id = Database.insert(String.format("INSERT INTO user (username, password) VALUES('%s', '%s');",
+                username, passwordHash(username, password)));
+        if (id == CONSTANT.STATE.DATABASE_ERROR) return null;
+        else return new User(id, username);
 
-    public boolean create() {
-        id = Database.insert(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');",
-                CONSTANT.TABLE.USER, username, passwordHash(username, password)));
-        return id != CONSTANT.STATE.DATABASE_ERROR;
     }
 
     public static User login(String username, String password) {
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';",
-                CONSTANT.TABLE.USER, username, passwordHash(username, password)));
+        ResultSet resultSet = Database.query(String.format("SELECT * FROM user WHERE username='%s' and password='%s';",
+                username, passwordHash(username, password)));
         try {
             if (resultSet.next()) {
                 User user = new User(resultSet.getInt("id"), resultSet.getString("username"));
@@ -51,8 +60,8 @@ public class User {
 
     private void createToken() {
         token = tokenHash(username);
-        Database.update(String.format("INSERT INTO %s (user_id, token) VALUES('%d', '%s');",
-                CONSTANT.TABLE.TOKEN, id, token));
+        Database.update(String.format("INSERT INTO token (user_id, token) VALUES('%d', '%s');",
+                id, token));
     }
 
     private static String convertToHexString(byte[] bytes) {
@@ -89,57 +98,8 @@ public class User {
         }
     }
 
-    public static int getIdByName(String username) {
-        ResultSet resultSet = Database.query(String.format("SELECT id FROM %s WHERE username='%s';", CONSTANT.TABLE.USER, username));
-        try {
-            return resultSet.next() ? resultSet.getInt("id") : CONSTANT.STATE.ID_NOT_FOUND;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return CONSTANT.STATE.ID_NOT_FOUND;
-    }
-
-    /**
-     * @param username username
-     * @return true if the username has been used
-     */
-    public static boolean hasUsername(String username) {
-        ResultSet resultSet = Database.query(String.format("SELECT username FROM %s WHERE username='%s';", CONSTANT.TABLE.USER, username));
-        try {
-            return resultSet.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return true;
-        }
-    }
-
-    /**
-     * @param username username
-     * @param password password
-     */
-    public static boolean doRegister(String username, String password) {
-        return Database.update(String.format("INSERT INTO %s (username, password) VALUES('%s', '%s');", CONSTANT.TABLE.USER, username, passwordHash(username, password)));
-    }
-
-    /**
-     * @param username username
-     * @param password password
-     * @return true if username and password match
-     */
-    private static boolean checkPassword(String username, String password) {
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE username='%s' and password='%s';",
-                CONSTANT.TABLE.USER, username, passwordHash(username, password)));
-        try {
-            return resultSet.next();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
     public static User getUserByToken(String token) {
-        ResultSet resultSet = Database.query(String.format("SELECT * FROM %s WHERE token='%s';", CONSTANT.TABLE.TOKEN, token));
+        ResultSet resultSet = Database.query(String.format("SELECT user_id,token,username FROM token INNER JOIN user ON token.user_id=user.id WHERE token='%s';", token));
         try {
             if (resultSet.next()) {
                 return new User(resultSet.getInt("user_id"), resultSet.getString("username"));
