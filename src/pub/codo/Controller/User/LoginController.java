@@ -2,7 +2,7 @@ package pub.codo.Controller.User;
 
 import pub.codo.Controller.Controller;
 import pub.codo.Model.User;
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +24,9 @@ public class LoginController extends Controller {
             String password = req.getParameter("password").trim();
             User user = User.login(username, password);
             // user not found
-            if (user == null) setResponse(CONSTANT.STATE.PASSWORD_MISSMATCH, "username or password mismatch.");
+            if (user == null) setResponse(STATE.PASSWORD_MISSMATCH, "username or password mismatch.");
             else setResponseUser(user);
-        } else setResponse(CONSTANT.STATE.PARAMETER_ERROR, "parameter invalid.");
+        } else setResponse(STATE.PARAMETER_ERROR, "parameter invalid.");
         makeResponse();
     }
 }

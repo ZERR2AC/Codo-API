@@ -1,7 +1,8 @@
 package pub.codo.Model;
 
 
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
+import pub.codo.Util.CONSTANT.DATABASE;
 import pub.codo.Util.Database;
 
 import java.security.MessageDigest;
@@ -36,7 +37,7 @@ public class User {
     public static User create(String username, String password) {
         int id = Database.insert(String.format("INSERT INTO user (username, password) VALUES('%s', '%s');",
                 username, passwordHash(username, password)));
-        if (id == CONSTANT.STATE.DATABASE_ERROR) return null;
+        if (id == STATE.DATABASE_ERROR) return null;
         else return new User(id, username);
 
     }
@@ -87,7 +88,7 @@ public class User {
     }
 
     private static String passwordHash(String username, String password) {
-        String hashString = username + password + CONSTANT.DATABASE.SALT;
+        String hashString = username + password + DATABASE.SALT;
         byte[] hashByte = hashString.getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");

@@ -15,7 +15,7 @@ public class Channel {
     public int id, type;
     public String name, last_update;
 
-    private Channel(int id, int type, String name, String last_update) {
+    Channel(int id, int type, String name, String last_update) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -90,9 +90,20 @@ public class Channel {
         return channels;
     }
 
-    private static boolean inChannel(int userId, int channelId) {
+    private static boolean inChannel(int channelId, int userId) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
                 userId, channelId));
+        try {
+            return resultSet.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static boolean isCreator(int channelId, int userId) {
+        ResultSet resultSet = Database.query(String.format("SELECT id FROM channel WHERE id='%d' AND creator_id='%d';",
+                channelId, userId));
         try {
             return resultSet.next();
         } catch (Exception e) {

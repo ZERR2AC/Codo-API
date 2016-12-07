@@ -1,7 +1,7 @@
 package pub.codo.Controller;
 
 
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ public class AuthController extends Controller {
     // make all connection are valid
     private void checkToken() {
         if (user == null) {
-            setResponse(CONSTANT.STATE.TOKEN_INVALID, "token invalid.");
+            setResponse(STATE.TOKEN_INVALID, "token invalid.");
             makeResponse();
             // stop the function without throw error to response
             throw new ExceptionInInitializerError();

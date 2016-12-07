@@ -1,7 +1,7 @@
 package pub.codo.Controller;
 
 
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ public class RestURLIdController extends AuthController {
         try {
             resourceId = Integer.parseInt(urls[urls.length - 1]);
         } catch (Exception e) {
-            setResponse(CONSTANT.STATE.PARAMETER_ERROR, "url id invalid.");
+            setResponse(STATE.PARAMETER_ERROR, "url id invalid.");
             makeResponse();
             // stop the function without throw error to response
             throw new ExceptionInInitializerError();

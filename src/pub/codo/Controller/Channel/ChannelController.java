@@ -2,7 +2,8 @@ package pub.codo.Controller.Channel;
 
 import pub.codo.Controller.RestURLIdController;
 import pub.codo.Model.Channel;
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
+import pub.codo.Util.CONSTANT.CHANNEL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,21 +18,21 @@ public class ChannelController extends RestURLIdController {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
         String[] parameters = {"action"};
-        int[] actionAcceptedValues = {CONSTANT.CHANNEL.ACTION_JOIN, CONSTANT.CHANNEL.ACTION_EXIT};
+        int[] actionAcceptedValues = {CHANNEL.ACTION_JOIN, CHANNEL.ACTION_EXIT};
 
         if (require(parameters) && in("name", actionAcceptedValues)) {
             switch (Integer.parseInt(req.getParameter("action"))) {
-                case CONSTANT.CHANNEL.ACTION_JOIN:
+                case CHANNEL.ACTION_JOIN:
                     if (!Channel.joinChannel(user.getId(), resourceId))
-                        setResponse(CONSTANT.STATE.ACTION_FAIL, "join channel fail.");
+                        setResponse(STATE.ACTION_FAIL, "join channel fail.");
                     break;
-                case CONSTANT.CHANNEL.ACTION_EXIT:
+                case CHANNEL.ACTION_EXIT:
                     if (!Channel.exitChannel(user.getId(), resourceId))
-                        setResponse(CONSTANT.STATE.ACTION_FAIL, "exit channel fail.");
+                        setResponse(STATE.ACTION_FAIL, "exit channel fail.");
                     break;
             }
         } else {
-            setResponse(CONSTANT.STATE.PARAMETER_ERROR, "action code error.");
+            setResponse(STATE.PARAMETER_ERROR, "action code error.");
         }
         makeResponse();
     }

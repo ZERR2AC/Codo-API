@@ -2,7 +2,8 @@ package pub.codo.Controller.Channel;
 
 import pub.codo.Controller.AuthController;
 import pub.codo.Model.Channel;
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
+import pub.codo.Util.CONSTANT.CHANNEL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,8 @@ public class ChannelsController extends AuthController {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doGet(req, resp);
 
-        int[] typeAcceptedValues = {CONSTANT.CHANNEL.CREATER, CONSTANT.CHANNEL.SUBSCRIBE, CONSTANT.CHANNEL.UNSUBSCRIBE};
-        if (!in("type", typeAcceptedValues)) setResponse(CONSTANT.STATE.PARAMETER_ERROR, "type error.");
+        int[] typeAcceptedValues = {CHANNEL.CREATER, CHANNEL.SUBSCRIBE, CHANNEL.UNSUBSCRIBE};
+        if (!in("type", typeAcceptedValues)) setResponse(STATE.PARAMETER_ERROR, "type error.");
         else setResponseChannels(Channel.getChannels(user.getId(), req.getParameter("type")));
         makeResponse();
     }
@@ -31,10 +32,10 @@ public class ChannelsController extends AuthController {
 
         if (require(parameters) && notEmpty(parameters)) {
             Channel channel = Channel.create(req.getParameter("name"), user.getId());
-            if (channel == null) setResponse(CONSTANT.STATE.NAME_DUPLICATED, "channel name has benn used.");
+            if (channel == null) setResponse(STATE.NAME_DUPLICATED, "channel name has benn used.");
             else setResponseChannel(channel);
         } else {
-            setResponse(CONSTANT.STATE.PARAMETER_ERROR, "name could not be empty.");
+            setResponse(STATE.PARAMETER_ERROR, "name could not be empty.");
         }
         makeResponse();
     }

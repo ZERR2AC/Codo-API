@@ -2,7 +2,7 @@ package pub.codo.Controller.User;
 
 import pub.codo.Controller.Controller;
 import pub.codo.Model.User;
-import pub.codo.Util.CONSTANT;
+import pub.codo.Util.CONSTANT.STATE;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,8 +24,8 @@ public class RegisterController extends Controller {
             String password = req.getParameter("password").trim();
             User user = User.create(username, password);
             // object create fail, username must be unique
-            if (user == null) setResponse(CONSTANT.STATE.ACTION_FAIL, "username has benn used.");
-        } else setResponse(CONSTANT.STATE.PARAMETER_ERROR, "parameter invalid.");
+            if (user == null) setResponse(STATE.ACTION_FAIL, "username has benn used.");
+        } else setResponse(STATE.PARAMETER_ERROR, "parameter invalid.");
         makeResponse();
     }
 }
