@@ -1,6 +1,6 @@
 package pub.codo.Controller;
 
-import pub.codo.Util.CONSTANT.STATE;
+import pub.codo.Controller.BaseController.APIController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,11 +10,12 @@ import java.io.IOException;
 /**
  * Created by terrychan on 06/12/2016.
  */
-public class StatusController extends Controller {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
-        setResponse(STATE.OK, "ok.");
+public class StatusController extends APIController {
+    public StatusController(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        super(httpServletRequest, httpServletResponse);
+    }
+
+    public void responseStatus() {
         makeResponse();
     }
 }

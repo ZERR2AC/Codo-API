@@ -6,7 +6,7 @@
 
     <servlet>
         <servlet-name>ServerStatus</servlet-name>
-        <servlet-class>pub.codo.Controller.StatusController</servlet-class>
+        <servlet-class>pub.codo.Router.Status</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServerStatus</servlet-name>
@@ -15,7 +15,7 @@
 
     <servlet>
         <servlet-name>UserRegister</servlet-name>
-        <servlet-class>pub.codo.Controller.User.RegisterController</servlet-class>
+        <servlet-class>pub.codo.Router.User.Register</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserRegister</servlet-name>
@@ -24,7 +24,7 @@
 
     <servlet>
         <servlet-name>UserLogin</servlet-name>
-        <servlet-class>pub.codo.Controller.User.LoginController</servlet-class>
+        <servlet-class>pub.codo.Router.User.Login</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserLogin</servlet-name>
@@ -33,7 +33,7 @@
 
     <servlet>
         <servlet-name>Channels</servlet-name>
-        <servlet-class>pub.codo.Controller.Channel.ChannelsController</servlet-class>
+        <servlet-class>pub.codo.Router.Channel.Channel</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Channels</servlet-name>
@@ -42,7 +42,7 @@
 
     <servlet>
         <servlet-name>Channel</servlet-name>
-        <servlet-class>pub.codo.Controller.Channel.ChannelController</servlet-class>
+        <servlet-class>pub.codo.Router.Channel.IdChannel</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Channel</servlet-name>
@@ -51,7 +51,7 @@
 
     <servlet>
         <servlet-name>Reminder</servlet-name>
-        <servlet-class>pub.codo.Controller.Reminder.RemindersController</servlet-class>
+        <servlet-class>pub.codo.Router.Reminder.Reminder</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Reminder</servlet-name>
@@ -60,7 +60,7 @@
 
     <servlet>
         <servlet-name>Reminders</servlet-name>
-        <servlet-class>pub.codo.Controller.Reminder.ReminderController</servlet-class>
+        <servlet-class>pub.codo.Router.Reminder.IdReminder</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Reminders</servlet-name>

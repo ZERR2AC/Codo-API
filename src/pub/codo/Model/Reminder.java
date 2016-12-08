@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Reminder {
     public String title, content, due, remark, last_update;
-    public int id, priority, type, state;
+    public int id, priority, type, state, creator_id;
     public Channel channel;
 
     public Reminder(String title, String content, String due, String last_update, int id, int priority, int type, int state) {
@@ -30,7 +30,7 @@ public class Reminder {
         this.state = state;
     }
 
-    public Reminder(String title, String content, String due, String remark, String last_update, int id, int priority, int type, int state, Channel channel) {
+    public Reminder(String title, String content, String due, String remark, String last_update, int id, int priority, int type, int state, int creator_id, Channel channel) {
         // for get reminders api
         this.title = title;
         this.content = content;
@@ -41,10 +41,11 @@ public class Reminder {
         this.priority = priority;
         this.type = type;
         this.state = state;
+        this.creator_id = creator_id;
         this.channel = channel;
     }
 
-    public Reminder(String title, String last_update, int id, int priority, int type, int state, Channel channel) {
+    public Reminder(String title, String last_update, int id, int priority, int type, int state, int creator_id, Channel channel) {
         // public reminder
         this.title = title;
         this.last_update = last_update;
@@ -52,6 +53,7 @@ public class Reminder {
         this.priority = priority;
         this.type = type;
         this.state = state;
+        this.creator_id = creator_id;
         this.channel = channel;
     }
 
@@ -92,12 +94,13 @@ public class Reminder {
                         int channelId = resultSet.getInt("channel_id");
                         String channelName = resultSet.getString("name");
                         String remark = resultSet.getString("remark");
+                        int creator_id = resultSet.getInt("creator_id");
                         int type;
                         if (resultSet.getString("in_channel") == null) type = CHANNEL.UNSUBSCRIBE;
                         else if (resultSet.getInt("creator_id") == userId) type = CHANNEL.CREATER;
                         else type = CHANNEL.SUBSCRIBE;
                         Channel channel = new Channel(channelId, type, channelName, lastUpdate);
-                        reminders.add(new Reminder(title, content, due, remark, lastUpdate, reminderId, priority, REMINDER.PUBLIC, state, channel));
+                        reminders.add(new Reminder(title, content, due, remark, lastUpdate, reminderId, priority, REMINDER.PUBLIC, state, creator_id, channel));
                         break;
                     case REMINDER.PRIVATE:
                         reminders.add(new Reminder(title, content, due, lastUpdate, reminderId, priority, REMINDER.PRIVATE, state));
@@ -128,7 +131,7 @@ public class Reminder {
             return null;
         }
         // end
-        Reminder reminder = new Reminder(title, timestamp, reminderId, priority, REMINDER.PUBLIC, REMINDER.UNDO,
+        Reminder reminder = new Reminder(title, timestamp, reminderId, priority, REMINDER.PUBLIC, REMINDER.UNDO, userId,
                 new Channel(channelId, CHANNEL.CREATER, channelName, timestamp));
         if (due != null && !due.isEmpty() && updateReminderTable(reminderId, "due", due))
             reminder.due = due;
@@ -214,7 +217,7 @@ public class Reminder {
     }
 
     public static boolean subscribeDelete(int reminderId, int userId) {
-        return Database.delete(String.format("DELETE FROM user_reminder WHERE WHERE reminder_id='%d' AND user_id='%d';",
+        return Database.delete(String.format("DELETE FROM user_reminder WHERE reminder_id='%d' AND user_id='%d';",
                 reminderId, userId));
     }
 }
