@@ -7,21 +7,17 @@ import java.sql.*;
  * Created by terrychan on 23/11/2016.
  */
 public class Database {
-    private static Connection connection;
-
     private Database() {
     }
 
-    private static synchronized Connection getConnection() {
-        String connectString = "jdbc:mysql://" + CONSTANT.DATABASE.HOST
-                + ":" + CONSTANT.DATABASE.PORT
-                + "/" + CONSTANT.DATABASE.DATABASE_NAME
-                + "?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8";
+    private static Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            if (connection == null)
-                connection = DriverManager.getConnection(connectString, CONSTANT.DATABASE.USERNAME, CONSTANT.DATABASE.PASSWORD);
-            return connection;
+            final String connectString = "jdbc:mysql://" + CONSTANT.DATABASE.HOST
+                    + ":" + CONSTANT.DATABASE.PORT
+                    + "/" + CONSTANT.DATABASE.DATABASE_NAME
+                    + "?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8";
+            return DriverManager.getConnection(connectString, CONSTANT.DATABASE.USERNAME, CONSTANT.DATABASE.PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
         }
