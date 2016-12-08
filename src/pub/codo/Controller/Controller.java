@@ -1,6 +1,7 @@
 package pub.codo.Controller;
 
 import pub.codo.Model.Channel;
+import pub.codo.Model.Reminder;
 import pub.codo.Model.User;
 import pub.codo.Util.CONSTANT;
 import pub.codo.Util.Json;
@@ -75,6 +76,14 @@ public class Controller extends HttpServlet {
         jsonResponse.channels = channels;
     }
 
+    public void setResponseReminders(List<Reminder> reminders) {
+        jsonResponse.reminders = reminders;
+    }
+
+    public void setResponseReminder(Reminder reminder) {
+        jsonResponse.reminder = reminder;
+    }
+
     public void makeResponse() {
         writer.write(Json.getGson().toJson(jsonResponse));
         writer.close();
@@ -86,6 +95,8 @@ public class Controller extends HttpServlet {
         User user;
         List<Channel> channels;
         Channel channel;
+        List<Reminder> reminders;
+        Reminder reminder;
     }
 
     public boolean require(String[] parameters) {
@@ -103,6 +114,25 @@ public class Controller extends HttpServlet {
         return true;
     }
 
+    public boolean notEmpty(String parameter) {
+        String value = httpServletRequest.getParameter(parameter);
+        if (value != null && value.trim().isEmpty()) return false;
+        else return true;
+    }
+
+    public boolean isInt(String[] parameters) {
+        for (String parameter : parameters) {
+            String value = httpServletRequest.getParameter(parameter);
+            if (value != null)
+                try {
+                    Integer.parseInt(value);
+                } catch (Exception e) {
+                    return false;
+                }
+        }
+        return true;
+    }
+
     public boolean in(String parameter, int[] acceptedValues) {
         boolean isIn = false;
         try {
@@ -114,6 +144,10 @@ public class Controller extends HttpServlet {
             return false;
         }
         return isIn;
+    }
+
+    public boolean isSet(String parameter) {
+        return httpServletRequest.getParameterValues(parameter) != null;
     }
 }
 

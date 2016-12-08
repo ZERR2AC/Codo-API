@@ -91,6 +91,7 @@ public class Channel {
     }
 
     private static boolean inChannel(int channelId, int userId) {
+        // not suggest to use this function because it runs very slow..
         ResultSet resultSet = Database.query(String.format("SELECT id FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
                 userId, channelId));
         try {
@@ -101,7 +102,7 @@ public class Channel {
         }
     }
 
-    private static boolean isCreator(int channelId, int userId) {
+    public static boolean isCreator(int channelId, int userId) {
         ResultSet resultSet = Database.query(String.format("SELECT id FROM channel WHERE id='%d' AND creator_id='%d';",
                 channelId, userId));
         try {
@@ -120,5 +121,15 @@ public class Channel {
     public static boolean exitChannel(int userId, int channelId) {
         return Database.delete(String.format("DELETE FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
                 userId, channelId));
+    }
+
+    public static ResultSet getUserIdInChannel(int channelId) {
+        return Database.query(String.format("SELECT user_id FROM user_channel WHERE channel_id='%d';",
+                channelId));
+    }
+
+    public static void notifyUpdate(int channnelId, String timestamp) {
+        Database.update(String.format("UPDATE channel SET last_update='%s' WHERE id='%d';",
+                timestamp, channnelId));
     }
 }

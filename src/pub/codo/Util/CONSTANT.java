@@ -43,5 +43,9 @@ public interface CONSTANT {
 
         int UNDO = 0;
         int COMPLETED = 1;
+
+        int LOW = 0;
+        int MED = 1;
+        int HIGH = 2;
     }
 }

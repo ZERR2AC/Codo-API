@@ -76,7 +76,7 @@ public class User {
 
     private static String tokenHash(String username) {
         Date date = new Date();
-        String hashString = username + date.toString() + CONSTANT.DATABASE.SALT;
+        String hashString = username + date.toString() + DATABASE.SALT;
         byte[] hashByte = hashString.getBytes();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");

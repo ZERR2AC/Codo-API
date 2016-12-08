@@ -44,8 +44,7 @@ public class Database {
         try {
             Connection conn = getConnection();
             Statement statement = conn.createStatement();
-            statement.executeUpdate(sql);
-            return true;
+            return statement.executeUpdate(sql) > 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
