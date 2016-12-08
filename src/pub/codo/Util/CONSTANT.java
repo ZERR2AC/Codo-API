@@ -27,7 +27,6 @@ public interface CONSTANT {
 
     interface STATE {
         int OK = 0;
-        int ID_NOT_FOUND = -1;
         int DATABASE_ERROR = -2;
         int NAME_DUPLICATED = 1;
         int PASSWORD_MISSMATCH = 2;
