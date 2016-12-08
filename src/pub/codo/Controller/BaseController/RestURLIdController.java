@@ -1,4 +1,4 @@
-package pub.codo.Controller;
+package pub.codo.Controller.BaseController;
 
 
 import pub.codo.Util.CONSTANT.STATE;
@@ -12,9 +12,9 @@ import java.io.IOException;
  * Created by terrychan on 07/12/2016.
  */
 public class RestURLIdController extends AuthController {
-    protected int resourceId;
+    public RestURLIdController(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        super(httpServletRequest, httpServletResponse);
 
-    protected void getRestURLId() {
         String url = httpServletRequest.getRequestURI();
         String[] urls = url.split("/");
         try {
@@ -27,21 +27,5 @@ public class RestURLIdController extends AuthController {
         }
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
-        getRestURLId();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-        getRestURLId();
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
-        getRestURLId();
-    }
+    protected int resourceId;
 }

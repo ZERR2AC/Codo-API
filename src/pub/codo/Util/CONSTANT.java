@@ -5,15 +5,12 @@ package pub.codo.Util;
  */
 public interface CONSTANT {
     interface DATABASE {
-    }
-
-    interface TABLE {
-        String USER = "user";
-        String TOKEN = "token";
-        String CHANNEL = "channel";
-        String USER_CHANNEL = "user_channel";
-        String REMINDER = "reminder";
-        String USER_REMINDER = "user_reminder";
+        String HOST = "127.0.0.1";
+        String PORT = "9696";
+        String DATABASE_NAME = "Codo2";
+        String USERNAME = "root";
+        String PASSWORD = "QgQ6VBSF7i";
+        String SALT = "https://itun.es/hk/zwLMW?i=815423920";
     }
 
     interface CHANNEL {
