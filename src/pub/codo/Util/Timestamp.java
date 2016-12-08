@@ -1,4 +1,4 @@
-package Codo.Util;
+package pub.codo.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
