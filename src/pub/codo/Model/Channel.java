@@ -27,7 +27,11 @@ public class Channel {
         int id = Database.insert(String.format("INSERT INTO channel (name, creator_id, last_update) VALUES('%s', '%d', '%s');",
                 name, creatorId, timestamp));
         if (id == CONSTANT.STATE.DATABASE_ERROR) return null;
-        else return new Channel(id, CONSTANT.CHANNEL.CREATER, name, timestamp);
+        else {
+            Database.update(String.format("INSERT INTO user_channel (user_id, channel_id) VALUES('%d', '%d');",
+                    creatorId, id));
+            return new Channel(id, CONSTANT.CHANNEL.CREATER, name, timestamp);
+        }
     }
 
     public static List<Channel> getChannels(int userId, String paraType) {
@@ -42,7 +46,7 @@ public class Channel {
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String name = resultSet.getString("name");
-                    int createrId = resultSet.getInt("creater_id");
+                    int createrId = resultSet.getInt("creator_id");
                     String last_update = resultSet.getString("last_update");
                     int type;
                     if (createrId == userId)
@@ -60,7 +64,7 @@ public class Channel {
             int type = Integer.parseInt(paraType);
             switch (type) {
                 case CONSTANT.CHANNEL.CREATER:
-                    sql = String.format("SELECT * FROM channel WHERE creater_id='%d' ORDER BY last_update DESC;",
+                    sql = String.format("SELECT * FROM channel WHERE creator_id='%d' ORDER BY last_update DESC;",
                             userId);
                     break;
                 case CONSTANT.CHANNEL.SUBSCRIBE:

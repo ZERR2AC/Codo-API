@@ -153,7 +153,7 @@ public class Reminder {
         String timestamp = Timestamp.getTime();
         int reminderId = Database.insert(String.format("INSERT INTO reminder (title, creator_id, type, priority) " +
                         "VALUE ('%s', '%d', '%d', '%d');",
-                title, userId, REMINDER.PUBLIC, priority));
+                title, userId, REMINDER.PRIVATE, priority));
         if (reminderId == STATE.DATABASE_ERROR) return null;
         if (!Database.update(String.format("INSERT INTO user_reminder (user_id, reminder_id, state, last_update) " +
                         "VALUE ('%d', '%d', '%d', '%s')",
