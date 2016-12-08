@@ -1,4 +1,4 @@
-package Codo.Util;
+package pub.codo.Util;
 
 import com.google.gson.Gson;
 
