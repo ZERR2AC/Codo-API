@@ -97,7 +97,7 @@ public class Reminder {
                         else if (resultSet.getInt("creator_id") == userId) type = CHANNEL.CREATER;
                         else type = CHANNEL.SUBSCRIBE;
                         Channel channel = new Channel(channelId, type, channelName, lastUpdate);
-                        reminders.add(new Reminder(title, content, due, remark, lastUpdate, reminderId, priority, type, state, channel));
+                        reminders.add(new Reminder(title, content, due, remark, lastUpdate, reminderId, priority, REMINDER.PUBLIC, state, channel));
                         break;
                     case REMINDER.PRIVATE:
                         reminders.add(new Reminder(title, content, due, lastUpdate, reminderId, priority, REMINDER.PRIVATE, state));
