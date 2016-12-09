@@ -212,7 +212,7 @@ public class Reminder {
                 timestamp, reminderId, userId));
     }
 
-    public static boolean createrDelete(int reminderId, int userId) {
+    public static boolean creatorDelete(int reminderId, int userId) {
         return Database.delete(String.format("DELETE FROM reminder WHERE id='%s' AND creator_id='%d';",
                 reminderId, userId));
     }
