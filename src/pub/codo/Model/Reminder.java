@@ -58,7 +58,7 @@ public class Reminder {
         this.channel = channel;
     }
 
-    public Reminder(String title, String last_update, int id, int priority, int type, int state) {
+    public Reminder(String title, String last_update, int id, int priority, int type, int state, int creator_id) {
         // private reminder
         this.title = title;
         this.last_update = last_update;
@@ -66,6 +66,7 @@ public class Reminder {
         this.priority = priority;
         this.type = type;
         this.state = state;
+        this.creator_id = creator_id;
     }
 
     public static List<Reminder> getRemindersByUserId(int userId) {
@@ -162,7 +163,7 @@ public class Reminder {
         if (!Database.update(String.format("INSERT INTO user_reminder (user_id, reminder_id, state, last_update) " +
                         "VALUE ('%d', '%d', '%d', '%s')",
                 userId, reminderId, REMINDER.UNDO, timestamp))) return null;
-        Reminder reminder = new Reminder(title, timestamp, reminderId, priority, REMINDER.PRIVATE, REMINDER.UNDO);
+        Reminder reminder = new Reminder(title, timestamp, reminderId, priority, REMINDER.PRIVATE, REMINDER.UNDO, userId);
         if (due != null && !due.isEmpty() && updateReminderTable(reminderId, "due", due))
             reminder.due = due;
         if (content != null && !content.isEmpty() && updateReminderTable(reminderId, "content", content))
