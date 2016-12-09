@@ -116,6 +116,18 @@ public class APIController {
         return true;
     }
 
+    protected boolean isInt(String parameter) {
+        String value = getStringParameter(parameter);
+        if (value != null){
+            try {
+                Integer.parseInt(value);
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected boolean in(String parameter, int[] acceptedValues) {
         boolean isIn = false;
         try {

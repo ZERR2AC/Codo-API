@@ -4,6 +4,7 @@ package pub.codo.Model;
 import pub.codo.Util.CONSTANT.STATE;
 import pub.codo.Util.CONSTANT.DATABASE;
 import pub.codo.Util.Database;
+import pub.codo.Util.Redis;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,28 +19,29 @@ public class User {
         return id;
     }
 
-    private int id;
+    private int id, expiry_time;
     private String username, token;
 
-    private User(int id, String username) {
+    private User(int id, String username, int expiryTime) {
         this.id = id;
         this.username = username;
+        this.expiry_time = expiryTime;
     }
 
     public static User create(String username, String password) {
         int id = Database.insert(String.format("INSERT INTO user (username, password) VALUES('%s', '%s');",
                 username, passwordHash(username, password)));
         if (id == STATE.DATABASE_ERROR) return null;
-        else return new User(id, username);
+        else return new User(id, username, 0);
 
     }
 
-    public static User login(String username, String password) {
+    public static User login(String username, String password, int expiryTime) {
         ResultSet resultSet = Database.query(String.format("SELECT * FROM user WHERE username='%s' and password='%s';",
                 username, passwordHash(username, password)));
         try {
             if (resultSet.next()) {
-                User user = new User(resultSet.getInt("id"), resultSet.getString("username"));
+                User user = new User(resultSet.getInt("id"), resultSet.getString("username"), expiryTime);
                 user.createToken();
                 return user;
             } else {
@@ -53,8 +55,7 @@ public class User {
 
     private void createToken() {
         token = tokenHash(username);
-        Database.update(String.format("INSERT INTO token (user_id, token) VALUES('%d', '%s');",
-                id, token));
+        Redis.setex(token, String.valueOf(id), expiry_time);
     }
 
     private static String convertToHexString(byte[] bytes) {
@@ -92,10 +93,13 @@ public class User {
     }
 
     public static User getUserByToken(String token) {
-        ResultSet resultSet = Database.query(String.format("SELECT user_id,token,username FROM token INNER JOIN user ON token.user_id=user.id WHERE token='%s';", token));
+        String userId = Redis.get(token);
+        int exTime = Redis.getExTime(token).intValue();
+        if (userId == null) return null;
+        ResultSet resultSet = Database.query(String.format("SELECT username FROM user WHERE id='%s';", userId));
         try {
             if (resultSet.next()) {
-                return new User(resultSet.getInt("user_id"), resultSet.getString("username"));
+                return new User(Integer.parseInt(userId), resultSet.getString("username"), exTime);
             } else {
                 return null;
             }

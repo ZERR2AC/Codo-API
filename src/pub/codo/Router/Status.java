@@ -15,6 +15,6 @@ public class Status extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         StatusController statusController = new StatusController(req, resp);
-        statusController.makeResponse();
+        statusController.responseStatus();
     }
 }

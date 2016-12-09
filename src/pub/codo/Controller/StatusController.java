@@ -1,6 +1,7 @@
 package pub.codo.Controller;
 
 import pub.codo.Controller.BaseController.APIController;
+import pub.codo.Util.Redis;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

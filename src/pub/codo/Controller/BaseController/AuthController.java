@@ -20,6 +20,7 @@ public class AuthController extends APIController {
         if (token == null) user = null;
         else {
             user = User.getUserByToken(token);
+            setResponseUser(user);
         }
         if (user == null) {
             setResponse(STATE.TOKEN_INVALID, "token invalid.");
