@@ -47,17 +47,6 @@ public class Database {
         return false;
     }
 
-    public static boolean delete(String sql) {
-        try {
-            Connection conn = getConnection();
-            Statement statement = conn.createStatement();
-            return statement.executeUpdate(sql) > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public static int insert(String sql) {
         try {
             Connection conn = getConnection();

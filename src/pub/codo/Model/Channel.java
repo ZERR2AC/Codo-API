@@ -85,7 +85,7 @@ public class Channel {
     }
 
     public static boolean exitChannel(int userId, int channelId) {
-        return Database.delete(String.format("DELETE FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
+        return Database.update(String.format("DELETE FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
                 userId, channelId));
     }
 

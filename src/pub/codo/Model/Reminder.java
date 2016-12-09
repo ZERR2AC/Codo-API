@@ -214,12 +214,12 @@ public class Reminder {
     }
 
     public static boolean creatorDelete(int reminderId, int userId) {
-        return Database.delete(String.format("DELETE FROM reminder WHERE id='%s' AND creator_id='%d';",
+        return Database.update(String.format("DELETE FROM reminder WHERE id='%s' AND creator_id='%d';",
                 reminderId, userId));
     }
 
     public static boolean subscribeDelete(int reminderId, int userId) {
-        return Database.delete(String.format("DELETE FROM user_reminder WHERE reminder_id='%d' AND user_id='%d';",
+        return Database.update(String.format("DELETE FROM user_reminder WHERE reminder_id='%d' AND user_id='%d';",
                 reminderId, userId));
     }
 }
