@@ -19,8 +19,10 @@ public class ChannelsController extends AuthController {
 
     public void getUserChannel() {
         int[] typeAcceptedValues = {CONSTANT.CHANNEL.CREATER, CONSTANT.CHANNEL.SUBSCRIBE, CONSTANT.CHANNEL.UNSUBSCRIBE};
-        if (!in("type", typeAcceptedValues)) setResponse(CONSTANT.STATE.PARAMETER_ERROR, "type error.");
-        else setResponseChannels(Channel.getChannels(user.getId(), getStringParameter("type")));
+        if (require("type") && in("type", typeAcceptedValues))
+            setResponseChannels(Channel.getChannels(user.getId(), Integer.parseInt(getStringParameter("type"))));
+        else
+            setResponse(CONSTANT.STATE.PARAMETER_ERROR, "type error.");
         makeResponse();
     }
 

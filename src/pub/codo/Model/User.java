@@ -18,14 +18,6 @@ public class User {
         return id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
     private int id;
     private String username, token;
 
