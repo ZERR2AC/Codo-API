@@ -75,7 +75,7 @@ public class Reminder {
                 "INNER JOIN reminder ON user_reminder.reminder_id = reminder.id " +
                 "LEFT JOIN channel ON reminder.channel_id = channel.id " +
                 "LEFT JOIN user_channel ON reminder.channel_id = user_channel.channel_id AND user_reminder.user_id = user_channel.user_id " +
-                "WHERE user_reminder.user_id='%d' ORDER BY last_update DESC; ", userId));
+                "WHERE user_reminder.user_id='%d' ORDER BY due;", userId));
         /*
         * if channel_id is null, reminder is private
         * if inChannel is null, user is NOT in channel
