@@ -22,7 +22,7 @@ public class User {
     private int id, expiry_time;
     private String username, token;
 
-    private User(int id, String username, int expiryTime) {
+    User(int id, String username, int expiryTime) {
         this.id = id;
         this.username = username;
         this.expiry_time = expiryTime;

@@ -48,6 +48,10 @@ public class APIController {
         jsonResponse.user = user;
     }
 
+    protected void setResponseUsers(List<User> users) {
+        jsonResponse.users = users;
+    }
+
     protected void setResponseChannel(Channel channel) {
         jsonResponse.channel = channel;
     }
@@ -72,6 +76,7 @@ public class APIController {
     class JsonResponse {
         int ret = CONSTANT.STATE.OK;
         String msg = "ok.";
+        List<User> users;
         User user;
         List<Channel> channels;
         Channel channel;
@@ -118,7 +123,7 @@ public class APIController {
 
     protected boolean isInt(String parameter) {
         String value = getStringParameter(parameter);
-        if (value != null){
+        if (value != null) {
             try {
                 Integer.parseInt(value);
             } catch (Exception e) {

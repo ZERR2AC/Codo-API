@@ -13,6 +13,12 @@ import java.io.IOException;
  */
 public class IdChannel extends HttpServlet {
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ChannelController channelController = new ChannelController(req, resp);
+        channelController.getUsersInChannel();
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ChannelController channelController = new ChannelController(req, resp);
         channelController.joinOrExitChannel();
