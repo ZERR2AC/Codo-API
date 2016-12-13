@@ -36,7 +36,7 @@ public class ReminderController extends RestURLIdController {
             Reminder.updateReminderTable(resourceId, "content", content);
         }
 
-        if (isSet("due") && notEmpty("due") && isCreator) {
+        if (isSet("due") && isCreator) {
             String due = getStringParameter("due");
             Reminder.updateReminderTable(resourceId, "due", due);
         }
@@ -65,12 +65,10 @@ public class ReminderController extends RestURLIdController {
         if (Reminder.isCreator(resourceId, user.getId())) {
             if (!Reminder.creatorDelete(resourceId, user.getId()))
                 setResponse(CONSTANT.STATE.ACTION_FAIL, "fail.");
-        }
-        else if (Reminder.hasReminder(resourceId, user.getId())) {
+        } else if (Reminder.hasReminder(resourceId, user.getId())) {
             if (!Reminder.subscribeDelete(resourceId, user.getId()))
                 setResponse(CONSTANT.STATE.ACTION_FAIL, "fail.");
-        }
-        else setResponse(CONSTANT.STATE.PERMISSION_DENY, "permission deny.");
+        } else setResponse(CONSTANT.STATE.PERMISSION_DENY, "permission deny.");
         makeResponse();
     }
 }
