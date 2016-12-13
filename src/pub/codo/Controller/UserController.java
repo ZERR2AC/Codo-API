@@ -21,10 +21,13 @@ public class UserController extends APIController {
         String[] parameters = {"username", "password"};
 
         // empty username or password
-        if (require(parameters) && notEmpty(parameters)) {
+        if (require(parameters) && notEmpty(parameters) && isInt("expiry_time")) {
             String username = getStringParameter("username").trim();
             String password = getStringParameter("password").trim();
-            User user = User.login(username, password);
+            int expiryTime;
+            if (isSet("expiry_time")) expiryTime = getIntParameter("expiry_time");
+            else expiryTime = CONSTANT.AUTH.DEFAULT_EXPIRYTIME;
+            User user = User.login(username, password, expiryTime);
             // user not found
             if (user == null) setResponse(CONSTANT.STATE.PASSWORD_MISSMATCH, "username or password mismatch.");
             else setResponseUser(user);

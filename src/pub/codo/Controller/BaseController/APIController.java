@@ -86,6 +86,10 @@ public class APIController {
         return true;
     }
 
+    protected boolean require(String parameter) {
+        return getStringParameter(parameter) != null;
+    }
+
     protected boolean notEmpty(String[] parameters) {
         for (String parameter : parameters) {
             String value = getStringParameter(parameter);
@@ -96,8 +100,7 @@ public class APIController {
 
     protected boolean notEmpty(String parameter) {
         String value = getStringParameter(parameter);
-        if (value != null && value.trim().isEmpty()) return false;
-        else return true;
+        return !(value != null && value.trim().isEmpty());
     }
 
     protected boolean isInt(String[] parameters) {
@@ -109,6 +112,18 @@ public class APIController {
                 } catch (Exception e) {
                     return false;
                 }
+        }
+        return true;
+    }
+
+    protected boolean isInt(String parameter) {
+        String value = getStringParameter(parameter);
+        if (value != null){
+            try {
+                Integer.parseInt(value);
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }

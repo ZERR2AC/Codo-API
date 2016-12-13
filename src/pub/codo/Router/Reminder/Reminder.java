@@ -21,6 +21,6 @@ public class Reminder extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RemindersController remindersController = new RemindersController(req, resp);
-        remindersController.createrReminder();
+        remindersController.createReminder();
     }
 }

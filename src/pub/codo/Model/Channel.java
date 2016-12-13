@@ -34,76 +34,38 @@ public class Channel {
         }
     }
 
-    public static List<Channel> getChannels(int userId, String paraType) {
-        List<Channel> channels = new ArrayList<>();
+    public static List<Channel> getChannels(int userId, int type) {
         String sql = "";
-        ResultSet resultSet;
-        if (paraType == null) {
-            // not suggest to use this function because it runs very slow..
-            sql = "SELECT * FROM channel ORDER BY last_update DESC;";
-            resultSet = Database.query(sql);
-            try {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    String name = resultSet.getString("name");
-                    int createrId = resultSet.getInt("creator_id");
-                    String last_update = resultSet.getString("last_update");
-                    int type;
-                    if (createrId == userId)
-                        type = CONSTANT.CHANNEL.CREATER;
-                    else if (inChannel(userId, id))
-                        type = CONSTANT.CHANNEL.SUBSCRIBE;
-                    else
-                        type = CONSTANT.CHANNEL.UNSUBSCRIBE;
-                    channels.add(new Channel(id, type, name, last_update));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            int type = Integer.parseInt(paraType);
-            switch (type) {
-                case CONSTANT.CHANNEL.CREATER:
-                    sql = String.format("SELECT * FROM channel WHERE creator_id='%d' ORDER BY last_update DESC;",
-                            userId);
-                    break;
-                case CONSTANT.CHANNEL.SUBSCRIBE:
-                    sql = String.format("SELECT channel.id,name,last_update FROM channel INNER JOIN user_channel " +
-                                    "ON channel.id=user_channel.channel_id WHERE user_id='%d' ORDER BY last_update DESC;",
-                            userId);
-                    break;
-                case CONSTANT.CHANNEL.UNSUBSCRIBE:
-                    sql = String.format("SELECT * FROM channel WHERE id NOT IN " +
-                                    "(SELECT channel.id FROM channel INNER JOIN user_channel ON channel.id=user_channel.channel_id WHERE user_id='%d')" +
-                                    " ORDER BY last_update DESC;",
-                            userId);
-                    break;
-            }
-            resultSet = Database.query(sql);
-            try {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("id");
-                    String name = resultSet.getString("name");
-                    String last_update = resultSet.getString("last_update");
-                    channels.add(new Channel(id, type, name, last_update));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        switch (type) {
+            case CONSTANT.CHANNEL.CREATER:
+                sql = String.format("SELECT * FROM channel WHERE creator_id='%d' ORDER BY last_update DESC;",
+                        userId);
+                break;
+            case CONSTANT.CHANNEL.SUBSCRIBE:
+                sql = String.format("SELECT channel.id,name,last_update FROM channel INNER JOIN user_channel " +
+                                "ON channel.id=user_channel.channel_id WHERE user_id='%d' ORDER BY last_update DESC;",
+                        userId);
+                break;
+            case CONSTANT.CHANNEL.UNSUBSCRIBE:
+                sql = String.format("SELECT * FROM channel WHERE id NOT IN " +
+                                "(SELECT channel.id FROM channel INNER JOIN user_channel ON channel.id=user_channel.channel_id WHERE user_id='%d')" +
+                                " ORDER BY last_update DESC;",
+                        userId);
+                break;
         }
-        return channels;
-    }
-
-    private static boolean inChannel(int channelId, int userId) {
-        // not suggest to use this function because it runs very slow..
-        ResultSet resultSet = Database.query(String.format("SELECT id FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
-                userId, channelId));
+        ResultSet resultSet = Database.query(sql);
+        List<Channel> channels = new ArrayList<>();
         try {
-            return resultSet.next();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String last_update = resultSet.getString("last_update");
+                channels.add(new Channel(id, type, name, last_update));
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+        return channels;
     }
 
     public static boolean isCreator(int channelId, int userId) {
@@ -123,17 +85,17 @@ public class Channel {
     }
 
     public static boolean exitChannel(int userId, int channelId) {
-        return Database.delete(String.format("DELETE FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
+        return Database.update(String.format("DELETE FROM user_channel WHERE user_id='%d' AND channel_id='%d';",
                 userId, channelId));
     }
 
-    public static ResultSet getUserIdInChannel(int channelId) {
+    static ResultSet getUserIdInChannel(int channelId) {
         return Database.query(String.format("SELECT user_id FROM user_channel WHERE channel_id='%d';",
                 channelId));
     }
 
-    public static void notifyUpdate(int channnelId, String timestamp) {
+    static void notifyUpdate(int channelId, String timestamp) {
         Database.update(String.format("UPDATE channel SET last_update='%s' WHERE id='%d';",
-                timestamp, channnelId));
+                timestamp, channelId));
     }
 }

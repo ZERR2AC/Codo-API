@@ -63,7 +63,7 @@ public class ReminderController extends RestURLIdController {
 
     public void deleteReminder() {
         if (Reminder.isCreator(resourceId, user.getId())) {
-            if (!Reminder.createrDelete(resourceId, user.getId()))
+            if (!Reminder.creatorDelete(resourceId, user.getId()))
                 setResponse(CONSTANT.STATE.ACTION_FAIL, "fail.");
         }
         else if (Reminder.hasReminder(resourceId, user.getId())) {

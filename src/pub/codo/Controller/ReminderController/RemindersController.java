@@ -23,7 +23,7 @@ public class RemindersController extends AuthController {
         makeResponse();
     }
 
-    public void createrReminder() {
+    public void createReminder() {
         String[] requiredParameters = {"title", "priority", "type"};
         int[] priorityAcceptedValues = {CONSTANT.REMINDER.LOW, CONSTANT.REMINDER.MED, CONSTANT.REMINDER.HIGH};
         int[] typeAcceptedValues = {CONSTANT.REMINDER.PUBLIC, CONSTANT.REMINDER.PRIVATE};
