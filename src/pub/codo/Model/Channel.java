@@ -94,6 +94,23 @@ public class Channel {
                 channelId));
     }
 
+    public static List<User> getUsers(int channelId) {
+        List<User> userList = new ArrayList<>();
+        ResultSet resultSet = Database.query(String.format("SELECT user_id, username FROM user_channel " +
+                        "INNER JOIN user ON user.id=user_channel.user_id WHERE channel_id='%d';",
+                channelId));
+        try {
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("user_id");
+                String username = resultSet.getString("username");
+                userList.add(new User(userId, username, 0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+
     static void notifyUpdate(int channelId, String timestamp) {
         Database.update(String.format("UPDATE channel SET last_update='%s' WHERE id='%d';",
                 timestamp, channelId));

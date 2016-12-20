@@ -17,6 +17,15 @@ public class ChannelController extends RestURLIdController {
         super(httpServletRequest, httpServletResponse);
     }
 
+    public void getUsersInChannel() {
+        if (Channel.isCreator(resourceId, user.getId())) {
+            setResponseUsers(Channel.getUsers(resourceId));
+        } else {
+            setResponse(CONSTANT.STATE.PERMISSION_DENY, "permission deny.");
+        }
+        makeResponse();
+    }
+
     public void joinOrExitChannel() {
         String[] parameters = {"action"};
         int[] actionAcceptedValues = {CONSTANT.CHANNEL.ACTION_JOIN, CONSTANT.CHANNEL.ACTION_EXIT};

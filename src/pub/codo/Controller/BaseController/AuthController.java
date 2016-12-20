@@ -13,6 +13,8 @@ import java.io.IOException;
  * Created by terrychan on 05/12/2016.
  */
 public class AuthController extends APIController {
+    protected User user;
+
     public AuthController(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         super(httpServletRequest, httpServletResponse);
 

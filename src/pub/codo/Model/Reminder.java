@@ -172,8 +172,12 @@ public class Reminder {
     }
 
     public static boolean updateReminderTable(int reminderId, String columnLabel, String value) {
-        return Database.update(String.format("UPDATE reminder SET %s='%s' WHERE id='%d';",
-                columnLabel, value, reminderId));
+        if (value.equals(""))
+            return Database.update(String.format("UPDATE reminder SET %s=NULL WHERE id='%d';",
+                    columnLabel, reminderId));
+        else
+            return Database.update(String.format("UPDATE reminder SET %s='%s' WHERE id='%d';",
+                    columnLabel, value, reminderId));
     }
 
     public static boolean updateUserReminderTable(int reminderId, int userId, String columnLabel, String value) {
