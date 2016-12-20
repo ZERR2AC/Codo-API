@@ -44,7 +44,7 @@ public class UserController extends APIController {
             String password = getStringParameter("password").trim();
             User user = User.create(username, password);
             // object create fail, username must be unique
-            if (user == null) setResponse(CONSTANT.STATE.ACTION_FAIL, "username has benn used.");
+            if (user == null) setResponse(CONSTANT.STATE.NAME_DUPLICATED, "username has benn used.");
         } else setResponse(CONSTANT.STATE.PARAMETER_ERROR, "parameter invalid.");
         makeResponse();
     }
