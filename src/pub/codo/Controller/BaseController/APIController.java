@@ -19,7 +19,6 @@ import java.util.List;
  */
 public class APIController {
     PrintWriter writer;
-    protected User user;
     HttpServletRequest httpServletRequest;
     HttpServletResponse httpServletResponse;
     JsonResponse jsonResponse;
